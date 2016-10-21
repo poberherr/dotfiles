@@ -8,6 +8,9 @@ Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
 "Plug 'valloric/youcompleteme' "Autocompletion
+Plug 'scrooloose/syntastic'
+Plug 'wesq3/vim-windowswap'
+Plug 'nathanaelkane/vim-indent-guides'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -61,6 +64,7 @@ set backupdir=~/.vim/tmp/backup
 
 " Set Swap directory
 set directory=~/.vim/tmp/swap
+set noswapfile 
 
 " Sets path to directory buffer was loaded from
 autocmd BufEnter * lcd %:p:h
@@ -75,6 +79,12 @@ set smartcase " Ignore case when searching lowercase
 set pastetoggle=<leader>z
 
 " Indenting
+" *******************************************************************
+" Indendguides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=237
 " *******************************************************************
 set ai " Automatically set the indent of a new line (local to buffer)
 set si " smartindent (local to buffer)
@@ -104,7 +114,7 @@ function! Tabstyle_four_spaces()
   set softtabstop=4
   set shiftwidth=4
   set tabstop=4
-  set expandtab
+  "set expandtab
 endfunction
 
 call Tabstyle_two_spaces()
@@ -115,7 +125,7 @@ autocmd FileType scss call Tabstyle_two_spaces()
 autocmd FileType haml call Tabstyle_two_spaces()
 autocmd FileType php call Tabstyle_four_spaces()
 autocmd FileType make call Tabstyle_tabs()
-
+autocmd FileType javascript call Tabstyle_two_spaces()
 
 " Airline fix
 " ******************************************************************
@@ -139,13 +149,35 @@ let g:airline_detect_iminsert=0
      "endif
 
  ""*******************************************************************
+
+" Syntax highligther
+" ******************************************************************
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0 
+
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#whitespace#enabled = 1
+" ******************************************************************
+ 
+" ******************************************************************
 map <C-n> :NERDTreeToggle<CR>
+map  <Help> <Esc>
+map! <Help> <Esc>
+map  <Insert> <Esc>
+map! <Insert> <Esc>
 
 filetype plugin indent on
 syntax enable
 colorscheme monokai
 
-execute pathogen#infect()
-call pathogen#helptags()
-
+" Line number highligther
+" ******************************************************************
+highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+set cursorline
 set number
