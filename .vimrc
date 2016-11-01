@@ -7,7 +7,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
-"Plug 'valloric/youcompleteme' "Autocompletion
+Plug 'valloric/youcompleteme' "Autocompletion
 Plug 'scrooloose/syntastic'
 Plug 'wesq3/vim-windowswap'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -36,7 +36,6 @@ nnoremap <silent> <C-Down> <c-w>j
 " Vertical and horizontal split then hop to a new buffer
 :noremap <Leader>v :vsp^M^W^W<cr>
 :noremap <Leader>h :split^M^W^W<cr>
-
 
 " Open NERDTree on start
 autocmd VimEnter * exe 'NERDTree' | wincmd l
@@ -144,11 +143,10 @@ let g:airline_detect_iminsert=0
 "endif
 "let g:airline_symbols.space = "\ua0"
 
- "if !exists('g:airline_symbols')
-     "let g:airline_symbols = {}
-     "endif
 
- ""*******************************************************************
+" You complete me 
+" ******************************************************************
+let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
 " Syntax highligther
 " ******************************************************************
