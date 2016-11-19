@@ -18,8 +18,10 @@ call plug#end()
 " Searching/highlight stuff
 set hlsearch  " highlight search
 set incsearch  " Incremental search, search as you type
+set exrc
 
-let mapleader = ","
+let mapleader = "\<Space>"
+
 
 " Windows
 " *********************************************************************
@@ -93,7 +95,7 @@ function! Tabstyle_tabs()
   set softtabstop=4
   set shiftwidth=4
   set tabstop=4
-  set noexpandtab
+  "set noexpandtab
   autocmd User Rails set softtabstop=4
   autocmd User Rails set shiftwidth=4
   autocmd User Rails set tabstop=4
@@ -113,7 +115,7 @@ function! Tabstyle_four_spaces()
   set softtabstop=4
   set shiftwidth=4
   set tabstop=4
-  "set expandtab
+  set expandtab
 endfunction
 
 call Tabstyle_two_spaces()
@@ -126,13 +128,19 @@ autocmd FileType php call Tabstyle_four_spaces()
 autocmd FileType make call Tabstyle_tabs()
 autocmd FileType javascript call Tabstyle_two_spaces()
 
+" genereally for now remove the tabs
+set expandtab
+
+
 " Airline fix
 " ******************************************************************
 "set fillchars+=stl:\ ,stlnc:\
-set guifont=Source\ Code\ Pro\ for\ Powerline
+set guifont=Source\ Code\ Pro\ for\ Powerline\ 14
+set encoding=utf-8
+
 "airline configuration
 let g:Powerline_symbols = 'fancy'
-"let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 let g:airline_detect_modified=1
 let g:airline_detect_paste=1
 let g:airline_detect_crypt=1
