@@ -35,13 +35,21 @@ nnoremap <silent> <C-Left> <c-w>h
 nnoremap <silent> <C-Up> <c-w>k
 nnoremap <silent> <C-Down> <c-w>j
 
+nnoremap <silent> <C-l> <c-w>l
+nnoremap <silent> <C-h> <c-w>h
+nnoremap <silent> <C-k> <c-w>k
+nnoremap <silent> <C-j> <c-w>j
+
+" Yield global in visual mode
+vnoremap <Leader>y "+y
+
 " Vertical and horizontal split then hop to a new buffer
 :noremap <Leader>v :vsp^M^W^W<cr>
 :noremap <Leader>h :split^M^W^W<cr>
 
 " Open NERDTree on start
 autocmd VimEnter * exe 'NERDTree' | wincmd l
-
+let NERDTreeShowHidden=1
 
 " NERD Commenter
 " **************************************************************
