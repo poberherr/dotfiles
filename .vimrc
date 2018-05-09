@@ -12,6 +12,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin' " Git for nerdtree
 Plug 'airblade/vim-gitgutter' " Git for the line numbers
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter' " Comments with Leader + C
@@ -22,11 +23,23 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'JamshedVesuna/vim-markdown-preview' " Ctrl + P to see the preview
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'mtscout6/syntastic-local-eslint.vim'
-" Plug 'zchee/nvim-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
+Plug 'roman/golden-ratio'
+Plug 'chun-yang/auto-pairs' " Add the pairing bracket 
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " symbols for neerdtree file types
+Plug 'ryanoasis/vim-devicons' " dependency of nerdtree syntax highliter
+
+" Py1 - places the column lists in select statement on new lines thon
+Plug 'python-mode/python-mode'
+
+
+" SQL Section
+Plug 'vim-scripts/SQLUtilities'
+Plug 'vim-scripts/Align'
 
 " Colorschema settings
 " ******************************************************************
+
 " Plug 'jonathanfilip/vim-lucius' " color scheme
 " let g:lucius_style = 'dark'
 " let g:lucius_contrast = 'low'
@@ -34,14 +47,16 @@ Plug 'fatih/vim-go'
 " colorscheme lucius
 
 " colorscheme peachpuff
-Plug 'fatih/molokai'
+" Plug 'fatih/molokai'
+" Plug 'beigebrucewayne/min_solo'
+Plug 'beigebrucewayne/subtle_solo'
 " Add plugins to &runtimepath
 call plug#end()
 
-let g:rehash256 = 1
-let g:molokai_original = 1
-colorscheme molokai
-
+" let g:rehash256 = 1
+" let g:molokai_original = 1
+" colorscheme molokai
+colorscheme subtle_dark
 
 " Searching/highlight stuff
 set hlsearch  " highlight search
@@ -81,6 +96,25 @@ vnoremap <Leader>y "+y
 "autocmd VimEnter * exe 'NERDTree' | wincmd l
 "let NERDTreeShowHidden=1
 
+let NERDTreeIgnore = ['\.pyc$','__pycache__']
+
+let g:NERDTreeDisableFileExtensionHighlight = 1
+let g:NERDTreeDisableExactMatchHighlight = 1
+let g:NERDTreeDisablePatternMatchHighlight = 1
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+
+
+" Pymode
+" *********************************************************************
+let g:pymode_folding = 0
+
+
 " NERD Commenter
 " **************************************************************
 :map <Leader>c :call NERDComment(0, "toggle")<CR>
@@ -93,7 +127,7 @@ let NERDCreateDefaultMappings=0 " I turn this off to make it simple
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
-:mes
+
 " Use compact syntax for prettified multi-line comments
 let g:NERDCompactSexyComs = 1
 
@@ -136,9 +170,9 @@ set pastetoggle=<leader>z
 " *******************************************************************
 " Indendguides
 let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=236
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=237
+let g:indent_guides_auto_colors = 1
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=236
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=237
 " *******************************************************************
 set ai " Automatically set the indent of a new line (local to buffer)
 set si " smartindent (local to buffer)
@@ -189,7 +223,9 @@ set expandtab
 " Vim-airline Settings
 "##############################################################################
 "set guifont=Source\ Code\ Pro\ for\ Powerline\ 14
-set guifont=Fira\ Mono\ for\ Powerline\ 14
+" set guifont=Fira\ Mono\ for\ Powerline\ 14
+set guifont=DroidSansMono\ Nerd\ Font:h11
+
 set encoding=utf-8
 
 "airline configuration
@@ -222,7 +258,7 @@ nnoremap <Leader>0 :10b<CR>
 " You complete me 
 " ******************************************************************
 let g:ycm_key_list_select_completion = ['<TAB>']
-let g:ycm_server_python_interpreter = '/usr/local/bin/python2.7'
+let g:ycm_server_python_interpreter = '/usr/bin/python'
 "let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
 " Syntax highligther
@@ -258,7 +294,7 @@ map! <Insert> <Esc>
 
 filetype plugin indent on
 syntax enable
-
+syntax on
 
 " Line number highligther
 " ******************************************************************
@@ -285,9 +321,20 @@ let g:go_metalinter_autosave = 1
 
 let g:go_fmt_command = "goimports"
 
+
 let g:go_def_mode = 'godef' " go to defenition
+
 
 
 " Fzf stuff
 " ******************************************************************
 let g:fzf_command_prefix = 'F'
+
+
+" SQL Formatter
+" ******************************************************************
+vmap <silent>sf        <Plug>SQLU_Formatter<CR>
+let g:sqlutil_col_list_terminators = 
+                       \ 'primary,reference,unique,check,foreign'
+let g:sqlutil_align_comma = 1 
+let sqlutil_align_first_word = 1
