@@ -2,6 +2,7 @@ call plug#begin('~/.vim/plugged')
 let g:syntastic_ignore_files = ['\.py$']
 let g:syntastic_ignore_files = ['\.py$']
 
+" Essentials
 " Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeTabsToggle' }
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin' " Git for nerdtree
@@ -13,9 +14,11 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter' " Comments with Leader + C
 Plug 'valloric/youcompleteme' " Autocompletion
 Plug 'wesq3/vim-windowswap' " Leader WW to swap panes
-" Plug 'nathanaelkane/vim-indent-guides'
+Plug 'csexton/trailertrash.vim' " Trailing whitespaces are highlighted
 Plug 'yggdroot/indentline'
 
+
+" Plug 'nathanaelkane/vim-indent-guides'
 Plug 'JamshedVesuna/vim-markdown-preview' " Ctrl + P to see the preview
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -33,7 +36,6 @@ Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 Plug 'nvie/vim-flake8' " flake 8 install
 Plug 'psf/black' " install black auto formatter for python
 
-Plug 'csexton/trailertrash.vim' " Trailing whitespaces are highlighted
 
 " Typescript 
 Plug 'leafgarland/typescript-vim'
