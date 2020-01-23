@@ -21,7 +21,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'fatih/vim-go'
-Plug 'roman/golden-ratio'
+" Plug 'roman/golden-ratio'
 Plug 'chun-yang/auto-pairs' " Add the pairing bracket
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " symbols for neerdtree file types
 Plug 'ryanoasis/vim-devicons' " dependency of nerdtree syntax highliter
@@ -438,7 +438,7 @@ set number
 
 " Settings for python interpreter
 " ******************************************************************
-let g:python2_host_prog = '/usr/bin/python'
+" let g:python2_host_prog = '/usr/bin/python'
 let g:python3_host_prog = '/usr/bin/python3'
 
 " Setting python-mode pymode
@@ -470,7 +470,7 @@ let g:go_def_mode = 'godef' " go to defenition
 
 " Fzf stuff
 " ******************************************************************
-let g:fzf_command_prefix = 'F'
+" let g:fzf_command_prefix = 'F'
 
 
 " SQL Formatter
