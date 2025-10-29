@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec rofi -show drun -theme /home/patrick/Development/dotfiles/.config/rofi/themes/dark.rasi -show-icons -drun-match-fields name,generic,exec,categories,keywords -matching fuzzy -sort -sorting-method fzf "$@"
+
+

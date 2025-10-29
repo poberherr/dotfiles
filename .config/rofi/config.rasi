@@ -1,0 +1,21 @@
+configuration {
+  modes: [ drun, run, window ];
+  font: "Inter 11";
+  show-icons: true;
+  icon-theme: ""; /* use system default */
+  drun-display-format: "{name}  <span foreground=\\\"@muted\\\" size=small>({exec})</span>";
+  display-drun: "Apps";
+  display-run: "Run";
+  display-window: "Windows";
+  matching: "fuzzy";
+  sort: true;
+  sorting-method: "fzf";
+  kb-row-select: "Tab";
+  kb-accept-entry: "Return,Ctrl+m";
+  disable-history: false;
+  drun-enable-cache: true;
+}
+
+@theme "/home/patrick/Development/dotfiles/.config/rofi/themes/dark.rasi"
+
+

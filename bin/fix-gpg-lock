@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Fix GPG keyboxd database lock issues
+# This script helps resolve GPG database lock problems when running yay update
+
+set -e
+
+echo "Checking for GPG locks..."
+
+# Check if keyboxd is running
+if pgrep -f keyboxd > /dev/null; then
+    echo "keyboxd is running. Checking for locks..."
+    
+    # Get the locking process PID
+    LOCK_PID=$(lsof /run/user/$(id -u)/gnupg/keyboxd.lock 2>/dev/null | awk 'NR>1 {print $2}' | head -1 || echo "")
+    
+    if [ -n "$LOCK_PID" ]; then
+        echo "Found process $LOCK_PID holding the lock."
+        echo "Attempting to kill the process..."
+        kill -9 "$LOCK_PID" 2>/dev/null || echo "Could not kill process $LOCK_PID"
+    fi
+fi
+
+# Kill any existing gpg processes
+echo "Killing existing GPG processes..."
+pkill -9 gpg || true
+pkill -9 keyboxd || true
+
+# Remove the lock file if it exists
+LOCK_FILE="/run/user/$(id -u)/gnupg/keyboxd.lock"
+if [ -f "$LOCK_FILE" ]; then
+    echo "Removing lock file: $LOCK_FILE"
+    rm -f "$LOCK_FILE"
+fi
+
+# Restart gpg-agent
+echo "Restarting gpg-agent..."
+gpgconf --kill gpg-agent || true
+gpgconf --kill keyboxd || true
+sleep 1
+gpgconf --launch gpg-agent || true
+
+# Rebuild keyboxd database
+if [ -d "$HOME/.gnupg" ]; then
+    echo "Attempting to rebuild keyboxd database..."
+    gpg --list-keys --keyid-format=long > /dev/null 2>&1 || true
+fi
+
+echo "GPG lock issue should be resolved. Try running 'yay update' again."
+
+

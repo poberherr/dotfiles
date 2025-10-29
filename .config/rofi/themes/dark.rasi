@@ -1,0 +1,101 @@
+/* Dark theme inspired by Catppuccin-Mocha */
+* {
+  bg:            #1e1e2e;
+  bg-alt:        #181825;
+  fg:            #cdd6f4;
+  muted:         #a6adc8;
+  accent:        #89b4fa; /* blue */
+  accent2:       #f38ba8; /* red */
+  highlight:     #313244;
+  urgent:        #f38ba8;
+  border:        #45475a;
+  sel:           #585b70;
+
+  border-width:  2px;
+  window-radius: 10px;
+}
+
+window {
+  transparency:        "real";
+  background-color:    @bg;
+  border:              @border-width;
+  border-color:        @border;
+  border-radius:       @window-radius;
+}
+
+mainbox {
+  padding: 12px;
+  background-color: transparent;
+}
+
+inputbar {
+  background-color: @bg-alt;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: @border-width;
+  border-color: @border;
+}
+
+prompt {
+  text-color: @muted;
+}
+
+textbox-prompt-colon {
+  expand: false;
+  str: ":";
+  text-color: @muted;
+}
+
+entry {
+  text-color: @fg;
+  placeholder: "Type to search...";
+  placeholder-color: @muted;
+}
+
+listview {
+  spacing: 6px;
+  lines: 12;
+  columns: 1;
+  fixed-height: true;
+  border: 0px;
+  background-color: transparent;
+}
+
+element {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: @bg-alt;
+  text-color: @fg;
+}
+
+element selected {
+  background-color: @highlight;
+  text-color: @accent;
+}
+
+element-icon {
+  size: 1.1em;
+}
+
+element-text, element-icon {
+  background-color: transparent;
+  text-color: inherit;
+}
+
+message {
+  padding: 8px 10px;
+  background-color: @bg-alt;
+  border-radius: 8px;
+}
+
+button {
+  padding: 6px 10px;
+  background-color: @bg-alt;
+  border-radius: 6px;
+}
+
+button selected {
+  background-color: @sel;
+}
+
+

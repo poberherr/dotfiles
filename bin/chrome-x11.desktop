@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Google Chrome (X11)
+GenericName=Web Browser
+Exec=/home/patrick/Development/dotfiles/bin/chrome-x11 %U
+Terminal=false
+Icon=google-chrome
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+Actions=NewWindow;NewIncognito;
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=/home/patrick/Development/dotfiles/bin/chrome-x11
+OnlyShowIn=Unity;GNOME;KDE;XFCE;LXQt;Pantheon;MATE;
+
+[Desktop Action NewIncognito]
+Name=New Incognito Window
+Exec=/home/patrick/Development/dotfiles/bin/chrome-x11 --incognito
+OnlyShowIn=Unity;GNOME;KDE;XFCE;LXQt;Pantheon;MATE;
+

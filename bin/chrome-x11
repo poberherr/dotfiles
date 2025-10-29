@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec google-chrome-stable --ozone-platform=x11 "$@"
+
+
