@@ -1,7 +1,8 @@
 [Desktop Entry]
 Name=Google Chrome (X11)
 GenericName=Web Browser
-Exec=/home/patrick/Development/dotfiles/bin/chrome-x11 %U
+# Update path to match your dotfiles location
+Exec=~/Development/dotfiles/bin/chrome-x11 %U
 Terminal=false
 Icon=google-chrome
 Type=Application
@@ -12,11 +13,10 @@ Actions=NewWindow;NewIncognito;
 
 [Desktop Action NewWindow]
 Name=New Window
-Exec=/home/patrick/Development/dotfiles/bin/chrome-x11
+Exec=~/Development/dotfiles/bin/chrome-x11
 OnlyShowIn=Unity;GNOME;KDE;XFCE;LXQt;Pantheon;MATE;
 
 [Desktop Action NewIncognito]
 Name=New Incognito Window
-Exec=/home/patrick/Development/dotfiles/bin/chrome-x11 --incognito
+Exec=~/Development/dotfiles/bin/chrome-x11 --incognito
 OnlyShowIn=Unity;GNOME;KDE;XFCE;LXQt;Pantheon;MATE;
-

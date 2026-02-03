@@ -1,0 +1,10 @@
+show=drun
+prompt=Run: 
+allow_markup=true
+matching=fuzzy
+lines=12
+columns=1
+term=kitty
+hide_scroll=true
+location=center
+allow_images=true

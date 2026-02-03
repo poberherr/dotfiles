@@ -1,0 +1,27 @@
+window {
+  margin: 0px;
+  padding: 6px;
+  border: 1px solid #2a2a2a;
+  background-color: #121212;
+}
+#input {
+  margin: 6px;
+  padding: 8px 10px;
+  border: 1px solid #333333;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+#inner-box {
+  margin: 6px;
+  padding: 0px;
+  background-color: #121212;
+}
+#outer-box { padding: 0px; }
+#scroll { margin: 0px; }
+#text { color: #e0e0e0; }
+#entry:selected {
+  background-color: #263238;
+}
+#text:selected { color: #ffffff; }
+#prompt { color: #9aa0a6; }
+#img { margin-right: 8px; }
