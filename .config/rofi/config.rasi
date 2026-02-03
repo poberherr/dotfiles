@@ -16,7 +16,7 @@ configuration {
   drun-enable-cache: true;
 }
 
-/* Theme - update path after symlinking dotfiles */
-@theme "~/.config/rofi/themes/dark.rasi"
+/* Theme - relative path works when this config is symlinked */
+@theme "themes/dark.rasi"
 
 
