@@ -10,8 +10,6 @@ configuration {
   matching: "fuzzy";
   sort: true;
   sorting-method: "fzf";
-  kb-row-select: "Tab";
-  kb-accept-entry: "Return,Ctrl+m";
   disable-history: false;
   drun-enable-cache: true;
 }
