@@ -66,28 +66,11 @@ sudo pacman -S ttf-jetbrains-mono-nerd ttf-font-awesome
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/Development/dotfiles
 cd ~/Development/dotfiles
 
-# Create symlinks (backup existing files first!)
-ln -sf ~/Development/dotfiles/.zshrc ~/.zshrc
-ln -sf ~/Development/dotfiles/.zprofile ~/.zprofile
-ln -sf ~/Development/dotfiles/.p10k.zsh ~/.p10k.zsh
-ln -sf ~/Development/dotfiles/.vimrc ~/.vimrc
-ln -sf ~/Development/dotfiles/.gitconfig ~/.gitconfig
-ln -sf ~/Development/dotfiles/.psqlrc ~/.psqlrc
+# Activate git hooks (secret scanning on commit)
+./setup-hooks.sh
 
-# Config directories
-mkdir -p ~/.config
-ln -sf ~/Development/dotfiles/.config/hypr ~/.config/hypr
-ln -sf ~/Development/dotfiles/.config/kitty ~/.config/kitty
-ln -sf ~/Development/dotfiles/.config/waybar ~/.config/waybar
-ln -sf ~/Development/dotfiles/.config/mako ~/.config/mako
-ln -sf ~/Development/dotfiles/.config/rofi ~/.config/rofi
-ln -sf ~/Development/dotfiles/.config/wofi ~/.config/wofi
-
-# Make scripts executable
-chmod +x ~/Development/dotfiles/bin/*
-chmod +x ~/Development/dotfiles/.config/waybar/power-menu.sh
-
-# Add bin to PATH (already in .zshrc)
+# Create symlinks for all configs (backs up existing files first)
+./sync.sh link
 ```
 
 ### Post-Install
@@ -96,6 +79,50 @@ chmod +x ~/Development/dotfiles/.config/waybar/power-menu.sh
 2. **Configure Powerlevel10k**: Run `p10k configure` for customization
 3. **Reload Hyprland**: `hyprctl reload` or log out and back in
 4. **Set up secrets**: Add any tokens/secrets to `~/.zshrc.local` (not tracked)
+
+## Syncing Configs
+
+The `sync.sh` script keeps your repo and live system in sync:
+
+```bash
+# Check what's different between repo and live system
+./sync.sh status
+
+# Show colored diffs (optionally filter by filename)
+./sync.sh diff
+./sync.sh diff waybar
+
+# Pull live configs into repo (scans for secrets first, asks confirmation)
+./sync.sh pull
+
+# Push repo configs to live system (backs up to ~/.dotfiles-backup/ first)
+./sync.sh push
+
+# Replace live copies with symlinks to repo (one-time migration)
+./sync.sh link
+```
+
+**Typical workflow:** edit live configs → test → `./sync.sh pull` → review with `git diff` → commit.
+
+Quick status check from anywhere: `dots` (shell alias for `./sync.sh status`).
+
+## Security
+
+### Pre-commit Secret Scanner
+
+A pre-commit hook (`.githooks/pre-commit`) scans staged files for credential patterns:
+- AWS access keys, GitHub PATs, OpenAI/Stripe keys, Slack tokens
+- Private key headers (`-----BEGIN...PRIVATE KEY-----`)
+- Generic `password/api_key/secret = "..."` patterns
+- Exported tokens (`export *TOKEN*=...`)
+
+To activate after cloning: `./setup-hooks.sh`
+
+Exempt specific lines with `# nosecret` comments. The `.p10k.zsh` file is skipped automatically (false positives).
+
+### Secrets Storage
+
+Never commit secrets to this repo. Store tokens and credentials in `~/.zshrc.local` which is sourced by `.zshrc` but not tracked in git.
 
 ## Customization
 

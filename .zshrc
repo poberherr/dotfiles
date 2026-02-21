@@ -192,6 +192,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 alias hy=hyprctl
+alias dots="~/Development/dotfiles/sync.sh status"
 source /usr/share/jenv-git/init-jenv.sh
 
 # Created by `pipx` on 2025-12-17 09:13:31

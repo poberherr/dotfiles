@@ -1,0 +1,23 @@
+# Backups
+*.bak
+*~
+*.orig
+
+# Editor junk
+*.swp
+*.swo
+.idea/
+.vscode/
+*.kate-swp
+
+# Secrets & credentials
+.env*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json
+
+# Claude Code
+.claude/
