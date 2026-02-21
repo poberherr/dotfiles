@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# rofi-volume — Dark popup volume slider (Catppuccin-styled)
+set -euo pipefail
+
+# Prevent multiple instances
+if pgrep -f "yad --scale.*Volume" >/dev/null 2>&1; then
+    pkill -f "yad --scale.*Volume"
+    exit 0
+fi
+
+get_volume() {
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%d", $2 * 100}'
+}
+
+is_muted() {
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED
+}
+
+# Unmute if muted
+if is_muted; then
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+fi
+
+current_vol=$(get_volume)
+
+# Catppuccin Mocha GTK CSS
+CSS_FILE="/tmp/rofi-volume-style.css"
+cat > "$CSS_FILE" << 'CSS'
+window {
+    background-color: #1e1e2e;
+    border-radius: 12px;
+    border: 2px solid #45475a;
+}
+scale {
+    color: #cdd6f4;
+    min-height: 36px;
+}
+scale trough {
+    background-color: #313244;
+    border-radius: 6px;
+    min-height: 8px;
+}
+scale trough highlight {
+    background-color: #89b4fa;
+    border-radius: 6px;
+    min-height: 8px;
+}
+scale slider {
+    background-color: #cdd6f4;
+    border-radius: 50%;
+    min-width: 18px;
+    min-height: 18px;
+}
+label {
+    color: #cdd6f4;
+}
+CSS
+
+GTK_THEME=Adwaita:dark \
+yad --scale \
+    --title="Volume" \
+    --value="$current_vol" \
+    --min-value=0 \
+    --max-value=100 \
+    --step=5 \
+    --print-partial \
+    --width=280 \
+    --height=60 \
+    --undecorated \
+    --on-top \
+    --mouse \
+    --no-buttons \
+    --skip-taskbar \
+    --timeout=5 \
+    --timeout-indicator=none \
+    --css="$CSS_FILE" \
+    2>/dev/null | while IFS= read -r vol; do
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "${vol}%"
+    done
