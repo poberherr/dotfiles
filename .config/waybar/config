@@ -43,11 +43,14 @@
     "on-click-right": "gnome-calendar"
   },
   "cpu": {
-    "format": "{usage}% ",
-    "tooltip": false
+    "format": "CPU {usage}%",
+    "tooltip": false,
+    "interval": 5
   },
   "memory": {
-    "format": "{}% "
+    "format": "MEM {percentage}%",
+    "tooltip": true,
+    "tooltip-format": "{used:0.1f} GiB / {total:0.1f} GiB"
   },
   "temperature": {
     "critical-threshold": 80,
@@ -87,8 +90,8 @@
         "🔊"
       ]
     },
-    "on-click": "pavucontrol",
-    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
     "scroll-step": 5,
@@ -117,8 +120,8 @@
     "format": "",
     "tooltip": true,
     "tooltip-format": "Power Menu",
-    "on-click": "~/.config/waybar/power-menu.sh",
-    "on-click-right": "~/.config/waybar/power-menu.sh",
+    "on-click": "/home/patrick/.config/waybar/power-menu.sh",
+    "on-click-right": "/home/patrick/.config/waybar/power-menu.sh",
     "interval": 86400
   }
 }
