@@ -122,7 +122,7 @@ export EDITOR='nvim'
 export GH_EDITOR='nvim'
 
 # AWS
-export AWS_PROFILE=allunity
+export AWS_PROFILE=patrick
 alias asl="aws sso login"
 
 # GIT
@@ -161,9 +161,6 @@ alias res="$HOME/.screenlayout/4knew.sh"
 alias ls="eza --icons=always"
 alias sshrm="~/.config/nenna-tooling/keyrm.sh"
 
-eval "$(zoxide init zsh)"
-alias cd="z"
-
 # Automatically load .envrc files
 eval "$(direnv hook zsh)"
 
@@ -197,3 +194,10 @@ source /usr/share/jenv-git/init-jenv.sh
 
 # Created by `pipx` on 2025-12-17 09:13:31
 export PATH="$HOME/.local/bin:$PATH"
+
+# Local overrides and secrets (not tracked by git)
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# zoxide must be initialized at the very end of .zshrc
+eval "$(zoxide init zsh)"
+alias cd="z"
