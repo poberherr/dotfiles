@@ -129,6 +129,14 @@ backup_item() {
     echo -e "  ${CYAN}Backed up${NC} $src"
 }
 
+# Reload Hyprland if running (picks up config changes)
+reload_hyprland() {
+    if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null 2>&1; then
+        hyprctl reload &>/dev/null
+        echo -e "  ${GREEN}Reloaded${NC} Hyprland config"
+    fi
+}
+
 # ── Commands ─────────────────────────────────────────────────────────
 
 cmd_status() {
@@ -480,6 +488,7 @@ cmd_push() {
     done
 
     echo ""
+    reload_hyprland
     echo -e "${GREEN}Done.${NC} Backup at ${CYAN}$backup_dir${NC}"
 }
 
@@ -565,6 +574,7 @@ cmd_link() {
     done
 
     echo ""
+    reload_hyprland
     echo -e "${GREEN}Done.${NC} Backup at ${CYAN}$backup_dir${NC}"
     echo -e "Changes to configs are now ${BOLD}live immediately${NC}."
 }
