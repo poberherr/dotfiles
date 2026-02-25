@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/goodroot/hyprwhspr/main/share/config.schema.json",
+  "use_hypr_bindings": true,
+  "model": "large-v3",
+  "transcription_backend": "nvidia",
+  "audio_ducking": true,
+  "language": "en"
+}

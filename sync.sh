@@ -30,6 +30,7 @@ declare -A FILE_MAP=(
     [".vimrc"]="$HOME/.vimrc"
     [".gitconfig"]="$HOME/.gitconfig"
     [".psqlrc"]="$HOME/.psqlrc"
+    [".config/hyprwhspr/config.json"]="$HOME/.config/hyprwhspr/config.json"
 )
 
 declare -A DIR_MAP=(

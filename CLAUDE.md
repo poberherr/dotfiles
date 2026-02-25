@@ -13,6 +13,7 @@ Personal dotfiles for an EndeavourOS + Hyprland (Wayland) desktop environment wi
 - **`.config/mako/config`** — Notification daemon
 - **`.config/rofi/`** — App launcher: `config.rasi` + `themes/dark.rasi`
 - **`.config/wofi/`** — Alternative Wayland launcher
+- **`.config/hyprwhspr/config.json`** — HyprWhisper speech-to-text (Whisper model, language, backend)
 - **`.config/kitty/kitty.conf`** — Terminal emulator (minimal config)
 - **`.zshrc`** — Shell config (oh-my-zsh, Powerlevel10k, aliases, tool integrations)
 - **`.vimrc`** — Vim with vim-plug (NERDTree, FZF, Airline, language support)
@@ -39,7 +40,7 @@ The repo and live system configs may differ. Always check with `./sync.sh status
 
 The sync tool manages these paths:
 
-**Files:** `.zshrc`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc` → `$HOME/`
+**Files:** `.zshrc`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc`, `.config/hyprwhspr/config.json` → `$HOME/`
 
 **Directories:** `.config/hypr`, `.config/kitty`, `.config/waybar`, `.config/mako`, `.config/rofi`, `.config/wofi` → `$HOME/.config/`
 
