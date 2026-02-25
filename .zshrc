@@ -190,6 +190,35 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 alias hy=hyprctl
 alias dots="~/Development/dotfiles/sync.sh status"
+
+# hyprwhspr mic switcher
+whspr() {
+  local sources current other_name other_label
+  sources=(${(f)"$(pactl list short sources | grep -v monitor)"})
+
+  if [[ ${#sources} -lt 2 ]]; then
+    echo "Only one mic detected"
+    pactl get-default-source
+    return 1
+  fi
+
+  current="$(pactl get-default-source)"
+  for line in "${sources[@]}"; do
+    local name="${${(s:\t:)line}[2]}"
+    [[ "$name" != "$current" ]] && { other_name="$name"; break }
+  done
+
+  case "$1" in
+    switch)
+      pactl set-default-source "$other_name"
+      echo "Switched mic to: $other_name"
+      ;;
+    *)
+      echo "Active mic: $current"
+      echo "Usage: whspr switch"
+      ;;
+  esac
+}
 source /usr/share/jenv-git/init-jenv.sh
 
 # Created by `pipx` on 2025-12-17 09:13:31
