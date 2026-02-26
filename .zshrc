@@ -228,5 +228,6 @@ export PATH="$HOME/.local/bin:$PATH"
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 # zoxide must be initialized at the very end of .zshrc
+export _ZO_DOCTOR=0
 eval "$(zoxide init zsh)"
 alias cd="z"
