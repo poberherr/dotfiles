@@ -100,7 +100,7 @@
     "tooltip-format": "{desc} - {volume}%"
   },
   "custom/claude-usage": {
-    "exec": "uv run --directory /home/patrick/Development/waybar-ai-usage-oauth python claude.py --waybar",
+    "exec": "~/.local/bin/claude-usage --waybar",
     "return-type": "json",
     "interval": 120,
     "format": "{}",
@@ -109,7 +109,7 @@
     "signal": 8
   },
   "custom/codex-usage": {
-    "exec": "uv run --directory /home/patrick/Development/waybar-ai-usage-oauth python codex.py --waybar",
+    "exec": "~/.local/bin/codex-usage --waybar",
     "return-type": "json",
     "interval": 120,
     "format": "{}",
