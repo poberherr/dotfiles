@@ -44,6 +44,8 @@ tooltip {
 #temperature,
 #network,
 #pulseaudio,
+#custom-claude-usage,
+#custom-codex-usage,
 #tray {
   background: #1e1e2e;
   padding: 0px 10px;
@@ -116,4 +118,40 @@ tooltip {
   color: #ffffff;
   background: rgba(224,108,117,0.2);
   border-radius: 6px;
+}
+
+/* Claude usage color states */
+#custom-claude-usage.claude-low {
+  color: #a6e3a1;
+}
+
+#custom-claude-usage.claude-mid {
+  color: #f9e2af;
+}
+
+#custom-claude-usage.claude-high {
+  color: #f38ba8;
+}
+
+#custom-claude-usage.critical {
+  color: #ff5555;
+  background: rgba(255, 85, 85, 0.1);
+}
+
+/* Codex usage color states */
+#custom-codex-usage.codex-low {
+  color: #a6e3a1;
+}
+
+#custom-codex-usage.codex-mid {
+  color: #f9e2af;
+}
+
+#custom-codex-usage.codex-high {
+  color: #f38ba8;
+}
+
+#custom-codex-usage.critical {
+  color: #ff5555;
+  background: rgba(255, 85, 85, 0.1);
 }

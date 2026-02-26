@@ -16,6 +16,8 @@
     "cpu",
     "memory",
     "temperature",
+    "custom/claude-usage",
+    "custom/codex-usage",
     "custom/notification",
     "tray",
     "custom/power"
@@ -96,6 +98,24 @@
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
     "scroll-step": 5,
     "tooltip-format": "{desc} - {volume}%"
+  },
+  "custom/claude-usage": {
+    "exec": "uv run --directory /home/patrick/Development/waybar-ai-usage-oauth python claude.py --waybar",
+    "return-type": "json",
+    "interval": 120,
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "pkill -RTMIN+8 waybar",
+    "signal": 8
+  },
+  "custom/codex-usage": {
+    "exec": "uv run --directory /home/patrick/Development/waybar-ai-usage-oauth python codex.py --waybar",
+    "return-type": "json",
+    "interval": 120,
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "pkill -RTMIN+9 waybar",
+    "signal": 9
   },
   "custom/notification": {
     "tooltip": false,
