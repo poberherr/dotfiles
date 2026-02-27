@@ -1,3 +1,4 @@
+@import "/usr/lib/hyprwhspr/config/waybar/hyprwhspr-style.css";
 * {
   border: none;
   border-radius: 0;
@@ -46,6 +47,7 @@ tooltip {
 #pulseaudio,
 #custom-claude-usage,
 #custom-codex-usage,
+#custom-hyprwhspr,
 #tray {
   background: #1e1e2e;
   padding: 0px 10px;

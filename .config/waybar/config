@@ -10,7 +10,11 @@
   "modules-center": [
     "clock"
   ],
+  "include": [
+    "/home/patrick/.config/waybar/hyprwhspr-module.jsonc"
+  ],
   "modules-right": [
+    "custom/hyprwhspr",
     "pulseaudio",
     "network",
     "cpu",
