@@ -1,0 +1,59 @@
+#!/bin/bash
+# Wrapper around hyprwhspr-tray.sh that enriches Waybar output with mic name.
+# Also supports "switch" action to toggle default microphone.
+
+TRAY_SCRIPT="/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh"
+
+# Map PulseAudio source names to friendly labels.
+# Add/edit entries here when hardware changes.
+mic_label() {
+  case "$1" in
+    *StreamCam*)  echo "StreamCam" ;;
+    *analog-stereo) echo "Headset" ;;
+    *)            echo "$1" ;;
+  esac
+}
+
+# Switch default source to the other available mic
+do_switch() {
+  local sources current other
+  sources=($(pactl list short sources | grep -v monitor | awk '{print $2}'))
+
+  if [[ ${#sources[@]} -lt 2 ]]; then
+    return 1
+  fi
+
+  current="$(pactl get-default-source)"
+  for s in "${sources[@]}"; do
+    [[ "$s" != "$current" ]] && { other="$s"; break; }
+  done
+
+  [[ -n "$other" ]] && pactl set-default-source "$other"
+}
+
+case "${1:-status}" in
+  switch)
+    do_switch
+    # After switching, emit updated status for Waybar
+    exec "$0" status
+    ;;
+  *)
+    # Get original JSON from hyprwhspr-tray.sh
+    json=$("$TRAY_SCRIPT" "$@")
+
+    # Get current mic label
+    default_source="$(pactl get-default-source 2>/dev/null)"
+    label="$(mic_label "$default_source")"
+
+    # Inject mic label into text field (append after icon)
+    # and prepend mic info + middle-click hint to tooltip
+    if [[ -n "$label" && -n "$json" ]]; then
+      json=$(echo "$json" | sed \
+        -e "s/\"text\":\"\([^\"]*\)\"/\"text\":\"\1 $label\"/" \
+        -e "s|Right-click: Restart service|Right-click: Restart service\\\\nMiddle-click: Switch mic|" \
+        -e "s/\"tooltip\":\"\([^\"]*\)\"/\"tooltip\":\"Active mic: $label\\\\n\1\"/")
+    fi
+
+    echo "$json"
+    ;;
+esac

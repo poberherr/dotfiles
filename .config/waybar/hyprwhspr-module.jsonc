@@ -1,12 +1,13 @@
 {
   "custom/hyprwhspr": {
     "format": "{}",
-    "exec": "/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh status",
+    "exec": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar status",
     "interval": 1,
     "return-type": "json",
     "exec-on-event": true,
-    "on-click": "/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh record",
-    "on-click-right": "/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh restart",
+    "on-click": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar record",
+    "on-click-right": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar restart",
+    "on-click-middle": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar switch",
     "tooltip": true
   }
 }
