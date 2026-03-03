@@ -3,6 +3,7 @@
 # Also supports "switch" action to toggle default microphone.
 
 TRAY_SCRIPT="/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh"
+MUTE_WRAPPER="$(dirname "$0")/hyprwhspr-mute-others"
 
 # Map PulseAudio source names to friendly labels.
 # Add/edit entries here when hardware changes.
@@ -35,6 +36,11 @@ case "${1:-status}" in
   switch)
     do_switch
     # After switching, emit updated status for Waybar
+    exec "$0" status
+    ;;
+  record)
+    # Use mute wrapper: mutes other apps' mic, sets volume to 100%
+    "$MUTE_WRAPPER" record
     exec "$0" status
     ;;
   *)

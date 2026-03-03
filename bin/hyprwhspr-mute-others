@@ -1,0 +1,61 @@
+#!/bin/bash
+# Wrapper around hyprwhspr recording that mutes other apps' mic access.
+#
+# Usage:
+#   hyprwhspr-mute-others record       # toggle recording (English)
+#   hyprwhspr-mute-others record de    # toggle recording (German)
+#
+# On start: set mic to 100%, mute all existing source-outputs, then record.
+# On stop:  stop recording, then unmute previously muted source-outputs.
+
+TRAY_SCRIPT="/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh"
+RECORDING_STATUS="$HOME/.config/hyprwhspr/recording_status"
+RECORDING_CONTROL="$HOME/.config/hyprwhspr/recording_control"
+MUTED_FILE="/tmp/hyprwhspr-muted-outputs"
+
+is_recording() {
+  [ "$(cat "$RECORDING_STATUS" 2>/dev/null)" = "true" ]
+}
+
+mute_others() {
+  pactl set-source-volume @DEFAULT_SOURCE@ 100%
+
+  # Mute all current source-outputs — only other apps exist at this point
+  # because hyprwhspr hasn't opened the mic yet
+  pactl -f json list source-outputs 2>/dev/null \
+    | jq -r '.[].index' > "$MUTED_FILE"
+  while read -r id; do
+    [ -n "$id" ] && pactl set-source-output-mute "$id" 1 2>/dev/null
+  done < "$MUTED_FILE"
+}
+
+unmute_others() {
+  if [ -f "$MUTED_FILE" ]; then
+    while read -r id; do
+      [ -n "$id" ] && pactl set-source-output-mute "$id" 0 2>/dev/null
+    done < "$MUTED_FILE"
+    rm -f "$MUTED_FILE"
+  fi
+}
+
+case "${1:-}" in
+  record)
+    if is_recording; then
+      # Stop recording, then unmute
+      echo stop > "$RECORDING_CONTROL"
+      unmute_others
+    else
+      # Mute others first, then start recording
+      mute_others
+      if [ -n "${2:-}" ]; then
+        echo "start:$2" > "$RECORDING_CONTROL"
+      else
+        echo start > "$RECORDING_CONTROL"
+      fi
+    fi
+    ;;
+  *)
+    echo "Usage: $0 record [LANG]"
+    exit 1
+    ;;
+esac
