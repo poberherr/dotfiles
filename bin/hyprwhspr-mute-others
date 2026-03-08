@@ -5,37 +5,43 @@
 #   hyprwhspr-mute-others record       # toggle recording (English)
 #   hyprwhspr-mute-others record de    # toggle recording (German)
 #
-# On start: set mic to 100%, mute all existing source-outputs, then record.
-# On stop:  stop recording, then unmute previously muted source-outputs.
+# On start: set mic to 100%, mute all non-hyprwhspr source-outputs, then record.
+# On stop:  stop recording, then unmute all source-outputs.
 
-TRAY_SCRIPT="/usr/lib/hyprwhspr/config/hyprland/hyprwhspr-tray.sh"
-RECORDING_STATUS="$HOME/.config/hyprwhspr/recording_status"
 RECORDING_CONTROL="$HOME/.config/hyprwhspr/recording_control"
-MUTED_FILE="/tmp/hyprwhspr-muted-outputs"
+OWN_STATE="/tmp/hyprwhspr-mute-state"
 
 is_recording() {
-  [ "$(cat "$RECORDING_STATUS" 2>/dev/null)" = "true" ]
+  [ "$(cat "$OWN_STATE" 2>/dev/null)" = "recording" ]
+}
+
+get_hyprwhspr_pid() {
+  systemctl --user show hyprwhspr.service --property=MainPID --value 2>/dev/null
 }
 
 mute_others() {
   pactl set-source-volume @DEFAULT_SOURCE@ 100%
 
-  # Mute all current source-outputs — only other apps exist at this point
-  # because hyprwhspr hasn't opened the mic yet
+  local hwpid
+  hwpid=$(get_hyprwhspr_pid)
+
+  # Mute all source-outputs except those belonging to hyprwhspr
   pactl -f json list source-outputs 2>/dev/null \
-    | jq -r '.[].index' > "$MUTED_FILE"
-  while read -r id; do
-    [ -n "$id" ] && pactl set-source-output-mute "$id" 1 2>/dev/null
-  done < "$MUTED_FILE"
+    | jq -r --arg pid "$hwpid" \
+        '.[] | select(.properties."application.process.id" != $pid) | .index' \
+    | while read -r id; do
+        [ -n "$id" ] && pactl set-source-output-mute "$id" 1 2>/dev/null
+      done
 }
 
 unmute_others() {
-  if [ -f "$MUTED_FILE" ]; then
-    while read -r id; do
-      [ -n "$id" ] && pactl set-source-output-mute "$id" 0 2>/dev/null
-    done < "$MUTED_FILE"
-    rm -f "$MUTED_FILE"
-  fi
+  # Unmute ALL source-outputs — indices are ephemeral in PipeWire so
+  # replaying saved indices is unreliable.
+  pactl -f json list source-outputs 2>/dev/null \
+    | jq -r '.[].index' \
+    | while read -r id; do
+        [ -n "$id" ] && pactl set-source-output-mute "$id" 0 2>/dev/null
+      done
 }
 
 case "${1:-}" in
@@ -44,9 +50,11 @@ case "${1:-}" in
       # Stop recording, then unmute
       echo stop > "$RECORDING_CONTROL"
       unmute_others
+      echo "stopped" > "$OWN_STATE"
     else
       # Mute others first, then start recording
       mute_others
+      echo "recording" > "$OWN_STATE"
       if [ -n "${2:-}" ]; then
         echo "start:$2" > "$RECORDING_CONTROL"
       else

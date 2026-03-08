@@ -106,19 +106,19 @@
   "custom/claude-usage": {
     "exec": "~/.local/bin/claude-usage --waybar",
     "return-type": "json",
-    "interval": 120,
+    "interval": 600,
     "format": "{}",
     "tooltip": true,
-    "on-click": "pkill -RTMIN+8 waybar",
+    "on-click": "rm -f ~/.cache/waybar-ai-usage/claude.json && pkill -RTMIN+8 waybar",
     "signal": 8
   },
   "custom/codex-usage": {
     "exec": "~/.local/bin/codex-usage --waybar",
     "return-type": "json",
-    "interval": 120,
+    "interval": 600,
     "format": "{}",
     "tooltip": true,
-    "on-click": "pkill -RTMIN+9 waybar",
+    "on-click": "rm -f ~/.cache/waybar-ai-usage/codex.json && pkill -RTMIN+9 waybar",
     "signal": 9
   },
   "custom/notification": {
