@@ -8,10 +8,11 @@
     "hyprland/window"
   ],
   "modules-center": [
-    "clock"
+    "clock",
+    "custom/weather"
   ],
   "include": [
-    "/home/patrick/.config/waybar/hyprwhspr-module.jsonc"
+    "~/.config/waybar/hyprwhspr-module.jsonc"
   ],
   "modules-right": [
     "custom/hyprwhspr",
@@ -102,6 +103,13 @@
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
     "scroll-step": 5,
     "tooltip-format": "{desc} - {volume}%"
+  },
+  "custom/weather": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1800,
+    "exec": "~/Development/dotfiles/bin/waybar-weather",
+    "on-click": "xdg-open 'https://wttr.in/Moenchengladbach'"
   },
   "custom/claude-usage": {
     "exec": "~/.local/bin/claude-usage --waybar",

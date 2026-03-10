@@ -102,6 +102,15 @@ tooltip {
   color: #f9e2af;
 }
 
+#custom-weather {
+  background: #1e1e2e;
+  padding: 0px 10px;
+  margin: 3px 0px;
+  margin-left: 10px;
+  border-radius: 10px;
+  color: #89dceb;
+}
+
 #custom-notification {
   color: #f9e2af;
 }

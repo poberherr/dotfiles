@@ -1,13 +1,1 @@
-{
-  "custom/hyprwhspr": {
-    "format": "{}",
-    "exec": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar status",
-    "interval": 1,
-    "return-type": "json",
-    "exec-on-event": true,
-    "on-click": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar record",
-    "on-click-right": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar restart",
-    "on-click-middle": "/home/patrick/Development/dotfiles/bin/hyprwhspr-waybar switch",
-    "tooltip": true
-  }
-}
+/home/patrick/Development/hyprwhspr-mic/waybar/hyprwhspr-module.jsonc

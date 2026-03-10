@@ -1,0 +1,31 @@
+#!/bin/bash
+# Weather module for Waybar using Open-Meteo (no API key needed)
+# Location: Mönchengladbach, Germany
+
+URL='https://api.open-meteo.com/v1/forecast?latitude=51.1954&longitude=6.4353&current=temperature_2m,weather_code&timezone=Europe/Berlin'
+
+data=$(curl -s --max-time 5 "$URL") || exit 0
+
+temp=$(echo "$data" | jq -r '.current.temperature_2m // empty') || exit 0
+code=$(echo "$data" | jq -r '.current.weather_code // empty') || exit 0
+
+[ -z "$temp" ] && exit 0
+
+# WMO weather codes to icons
+case $code in
+  0)         icon="☀️"  desc="Clear sky" ;;
+  1|2|3)     icon="⛅"  desc="Partly cloudy" ;;
+  45|48)     icon="🌫️"  desc="Fog" ;;
+  51|53|55)  icon="🌦️"  desc="Drizzle" ;;
+  61|63|65)  icon="🌧️"  desc="Rain" ;;
+  66|67)     icon="🌧️"  desc="Freezing rain" ;;
+  71|73|75)  icon="❄️"  desc="Snow" ;;
+  77)        icon="❄️"  desc="Snow grains" ;;
+  80|81|82)  icon="🌧️"  desc="Showers" ;;
+  85|86)     icon="❄️"  desc="Snow showers" ;;
+  95|96|99)  icon="⛈️"  desc="Thunderstorm" ;;
+  *)         icon="?"   desc="Unknown" ;;
+esac
+
+temp_rounded=$(LC_NUMERIC=C printf "%.0f" "$temp")
+printf '{"text":"%s %s°C","tooltip":"Mönchengladbach: %s, %s°C"}\n' "$icon" "$temp_rounded" "$desc" "$temp"
