@@ -19,5 +19,6 @@ id_rsa
 id_ed25519
 credentials.json
 
-# Claude Code
-.claude/
+# Claude Code (keep project settings, ignore auth/cache)
+.claude/*
+!.claude/settings.local.json
