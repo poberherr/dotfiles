@@ -48,8 +48,8 @@ ZSH_THEME=""  # Empty to disable oh-my-zsh themes (using Powerlevel10k)
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+# Disable oh-my-zsh auto title — custom repo-aware title set below
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -226,6 +226,18 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Local overrides and secrets (not tracked by git)
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Set terminal title to git repo name (or directory if not in a repo)
+function _set_terminal_title() {
+  local repo
+  repo=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [[ -n "$repo" ]]; then
+    print -n "\e]2;${repo:t}\a"
+  else
+    print -n "\e]2;${PWD:t}\a"
+  fi
+}
+precmd_functions+=(_set_terminal_title)
 
 # zoxide must be initialized at the very end of .zshrc
 export _ZO_DOCTOR=0
