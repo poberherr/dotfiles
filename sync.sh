@@ -11,6 +11,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_BASE="$HOME/.dotfiles-backup"
+CURRENT_OS="$(uname -s)"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,37 +22,66 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 # ── File mapping: repo path → live path ──────────────────────────────
-# Associative array: keys are relative repo paths, values are absolute live paths
-declare -A FILE_MAP=(
-    # Home directory files
-    [".zshrc"]="$HOME/.zshrc"
-    [".zprofile"]="$HOME/.zprofile"
-    [".p10k.zsh"]="$HOME/.p10k.zsh"
-    [".vimrc"]="$HOME/.vimrc"
-    [".gitconfig"]="$HOME/.gitconfig"
-    [".psqlrc"]="$HOME/.psqlrc"
-    [".config/hyprwhspr/config.json"]="$HOME/.config/hyprwhspr/config.json"
-)
+# Parallel arrays: FILE_KEYS[i] is repo-relative, FILE_VALS[i] is live path
+# Works on bash 3.2+ (macOS) — no associative arrays needed
 
-declare -A DIR_MAP=(
-    # .config directories
-    [".config/hypr"]="$HOME/.config/hypr"
-    [".config/kitty"]="$HOME/.config/kitty"
-    [".config/waybar"]="$HOME/.config/waybar"
-    [".config/mako"]="$HOME/.config/mako"
-    [".config/rofi"]="$HOME/.config/rofi"
-    [".config/wofi"]="$HOME/.config/wofi"
-)
+# Shared files (both platforms)
+FILE_KEYS=( ".zshrc" ".zshrc.shared" ".zprofile" ".p10k.zsh" ".vimrc" ".gitconfig" ".psqlrc" )
+FILE_VALS=( "$HOME/.zshrc" "$HOME/.zshrc.shared" "$HOME/.zprofile" "$HOME/.p10k.zsh" "$HOME/.vimrc" "$HOME/.gitconfig" "$HOME/.psqlrc" )
+
+# Shared directories (both platforms)
+DIR_KEYS=( ".config/kitty" )
+DIR_VALS=( "$HOME/.config/kitty" )
+
+# Platform-specific additions
+if [[ "$CURRENT_OS" == "Linux" ]]; then
+    FILE_KEYS+=( ".zshrc.linux" ".config/hyprwhspr/config.json" )
+    FILE_VALS+=( "$HOME/.zshrc.linux" "$HOME/.config/hyprwhspr/config.json" )
+    DIR_KEYS+=( ".config/hypr" ".config/waybar" ".config/mako" ".config/rofi" ".config/wofi" )
+    DIR_VALS+=( "$HOME/.config/hypr" "$HOME/.config/waybar" "$HOME/.config/mako" "$HOME/.config/rofi" "$HOME/.config/wofi" )
+elif [[ "$CURRENT_OS" == "Darwin" ]]; then
+    FILE_KEYS+=( ".zshrc.darwin" )
+    FILE_VALS+=( "$HOME/.zshrc.darwin" )
+fi
 
 # ── Helpers ──────────────────────────────────────────────────────────
 
 die() { echo -e "${RED}Error:${NC} $*" >&2; exit 1; }
 
+# Portable readlink -f (works on macOS without coreutils)
+resolve_path() {
+    local path="$1"
+    if command -v realpath &>/dev/null; then
+        realpath "$path" 2>/dev/null
+    elif command -v greadlink &>/dev/null; then
+        greadlink -f "$path" 2>/dev/null
+    elif [[ -d "$path" ]]; then
+        (cd "$path" && pwd -P)
+    elif [[ -f "$path" || -L "$path" ]]; then
+        local dir file
+        dir="$(cd "$(dirname "$path")" && pwd -P)"
+        file="$(basename "$path")"
+        if [[ -L "$dir/$file" ]]; then
+            local target
+            target="$(readlink "$dir/$file")"
+            if [[ "$target" == /* ]]; then
+                resolve_path "$target"
+            else
+                resolve_path "$dir/$target"
+            fi
+        else
+            echo "$dir/$file"
+        fi
+    else
+        echo "$path"
+    fi
+}
+
 # Check if a path is a symlink pointing to the repo
 is_repo_symlink() {
     local live_path="$1"
     local repo_path="$2"
-    [[ -L "$live_path" ]] && [[ "$(readlink -f "$live_path")" == "$(readlink -f "$repo_path")" ]]
+    [[ -L "$live_path" ]] && [[ "$(resolve_path "$live_path")" == "$(resolve_path "$repo_path")" ]]
 }
 
 # Scan a file for secret patterns (same patterns as pre-commit hook)
@@ -68,25 +98,25 @@ scan_secrets() {
 
     local line_num=0
     while IFS= read -r line; do
-        ((line_num++)) || true
+        line_num=$((line_num + 1))
 
         [[ "$line" == *"# nosecret"* ]] && continue
         [[ "$line" == *"// nosecret"* ]] && continue
 
         local matched=""
-        if echo "$line" | grep -qP -- 'AKIA[0-9A-Z]{16}' 2>/dev/null; then
+        if echo "$line" | grep -qE -- 'AKIA[0-9A-Z]{16}' 2>/dev/null; then
             matched="AWS Access Key"
-        elif echo "$line" | grep -qP -- '(ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{82}|gho_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36})' 2>/dev/null; then
+        elif echo "$line" | grep -qE -- '(ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{82}|gho_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36})' 2>/dev/null; then
             matched="GitHub Token"
-        elif echo "$line" | grep -qP -- 'sk-[a-zA-Z0-9]{20,}' 2>/dev/null; then
+        elif echo "$line" | grep -qE -- 'sk-[a-zA-Z0-9]{20,}' 2>/dev/null; then
             matched="API Secret Key"
-        elif echo "$line" | grep -qP -- 'xox[bporas]-[a-zA-Z0-9-]+' 2>/dev/null; then
+        elif echo "$line" | grep -qE -- 'xox[bporas]-[a-zA-Z0-9-]+' 2>/dev/null; then
             matched="Slack Token"
-        elif echo "$line" | grep -qP -- '-----BEGIN\s+(RSA|DSA|EC|OPENSSH|PGP)?\s*PRIVATE KEY-----' 2>/dev/null; then
+        elif echo "$line" | grep -qE -- '-----BEGIN[[:space:]]+(RSA|DSA|EC|OPENSSH|PGP)?[[:space:]]*PRIVATE KEY-----' 2>/dev/null; then
             matched="Private Key"
-        elif echo "$line" | grep -qPi -- '(password|api_key|apikey|secret_key|secret|token|auth_token)\s*[=:]\s*["\x27][^\s"'\'']{8,}' 2>/dev/null; then
+        elif echo "$line" | grep -qEi -- '(password|api_key|apikey|secret_key|secret|token|auth_token)[[:space:]]*[=:][[:space:]]*["'"'"'][^[:space:]"'"'"']{8,}' 2>/dev/null; then
             matched="Hardcoded Secret"
-        elif echo "$line" | grep -qPi -- 'export\s+\w*(TOKEN|SECRET|PASSWORD|API_KEY|APIKEY)\w*\s*=\s*["\x27]?[^\s"'\''#]{8,}' 2>/dev/null; then
+        elif echo "$line" | grep -qEi -- 'export[[:space:]]+[a-zA-Z0-9_]*(TOKEN|SECRET|PASSWORD|API_KEY|APIKEY)[a-zA-Z0-9_]*[[:space:]]*=[[:space:]]*["'"'"']?[^[:space:]"'"'"'#]{8,}' 2>/dev/null; then
             matched="Exported Secret"
         fi
 
@@ -121,17 +151,13 @@ backup_item() {
 
     local dest="$backup_dir/$rel_path"
     mkdir -p "$(dirname "$dest")"
-
-    if [[ -d "$src" ]] && [[ ! -L "$src" ]]; then
-        cp -a "$src" "$dest"
-    else
-        cp -a "$src" "$dest"
-    fi
+    cp -a "$src" "$dest"
     echo -e "  ${CYAN}Backed up${NC} $src"
 }
 
-# Reload Hyprland if running (picks up config changes)
+# Reload Hyprland if running (Linux only)
 reload_hyprland() {
+    [[ "$CURRENT_OS" == "Linux" ]] || return 0
     if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null 2>&1; then
         hyprctl reload &>/dev/null
         echo -e "  ${GREEN}Reloaded${NC} Hyprland config"
@@ -141,7 +167,7 @@ reload_hyprland() {
 # ── Commands ─────────────────────────────────────────────────────────
 
 cmd_status() {
-    echo -e "${BOLD}Dotfiles Status${NC}"
+    echo -e "${BOLD}Dotfiles Status${NC} (${CYAN}${CURRENT_OS}${NC})"
     echo -e "${BOLD}===============${NC}"
     echo ""
 
@@ -149,63 +175,65 @@ cmd_status() {
 
     # Check individual files
     echo -e "${BOLD}Files:${NC}"
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    local i
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         if [[ ! -e "$repo_path" ]]; then
             if [[ -e "$live_path" ]]; then
                 echo -e "  ${YELLOW}extra${NC}     $repo_rel  (live only, not in repo)"
-                ((extra++)) || true
+                extra=$((extra + 1))
             fi
             continue
         fi
 
         if [[ ! -e "$live_path" ]]; then
             echo -e "  ${RED}missing${NC}   $repo_rel  (not deployed)"
-            ((missing_live++)) || true
+            missing_live=$((missing_live + 1))
         elif is_repo_symlink "$live_path" "$repo_path"; then
             echo -e "  ${GREEN}linked${NC}    $repo_rel"
-            ((linked++)) || true
+            linked=$((linked + 1))
         elif diff -q "$repo_path" "$live_path" &>/dev/null; then
             echo -e "  ${GREEN}synced${NC}    $repo_rel"
-            ((linked++)) || true
+            linked=$((linked + 1))
         else
             echo -e "  ${YELLOW}modified${NC}  $repo_rel"
-            ((modified++)) || true
+            modified=$((modified + 1))
         fi
     done
 
     echo ""
     echo -e "${BOLD}Directories:${NC}"
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         if [[ ! -d "$repo_path" ]]; then
             if [[ -d "$live_path" ]]; then
                 echo -e "  ${YELLOW}extra${NC}     $repo_rel/  (live only)"
-                ((extra++)) || true
+                extra=$((extra + 1))
             fi
             continue
         fi
 
         if [[ ! -e "$live_path" ]]; then
             echo -e "  ${RED}missing${NC}   $repo_rel/  (not deployed)"
-            ((missing_live++)) || true
+            missing_live=$((missing_live + 1))
         elif [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path"; then
             echo -e "  ${GREEN}linked${NC}    $repo_rel/"
-            ((linked++)) || true
+            linked=$((linked + 1))
         else
-            # Compare directory contents
             local diff_count
             diff_count=$(diff -rq "$repo_path" "$live_path" 2>/dev/null | wc -l) || true
             if [[ "$diff_count" -eq 0 ]]; then
                 echo -e "  ${GREEN}synced${NC}    $repo_rel/"
-                ((linked++)) || true
+                linked=$((linked + 1))
             else
                 echo -e "  ${YELLOW}modified${NC}  $repo_rel/  ($diff_count files differ)"
-                ((modified++)) || true
+                modified=$((modified + 1))
             fi
         fi
     done
@@ -249,21 +277,23 @@ cmd_diff() {
         fi
     }
 
-    local found=0
+    local found=0 i
 
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         if [[ -n "$filter" ]] && [[ "$repo_rel" != *"$filter"* ]]; then
             continue
         fi
-        diff_item "$REPO_DIR/$repo_rel" "${FILE_MAP[$repo_rel]}" "$repo_rel"
+        diff_item "$REPO_DIR/$repo_rel" "${FILE_VALS[$i]}" "$repo_rel"
         found=1
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         if [[ -n "$filter" ]] && [[ "$repo_rel" != *"$filter"* ]]; then
             continue
         fi
-        diff_item "$REPO_DIR/$repo_rel" "${DIR_MAP[$repo_rel]}" "$repo_rel/"
+        diff_item "$REPO_DIR/$repo_rel" "${DIR_VALS[$i]}" "$repo_rel/"
         found=1
     done
 
@@ -279,9 +309,10 @@ cmd_pull() {
 
     # Scan live files for secrets first
     echo -e "${BOLD}Scanning live configs for secrets...${NC}"
-    local secrets_found=0
-    for repo_rel in "${!FILE_MAP[@]}"; do
-        local live_path="${FILE_MAP[$repo_rel]}"
+    local secrets_found=0 i
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
+        local live_path="${FILE_VALS[$i]}"
         # Skip .p10k.zsh (false positives)
         [[ "$(basename "$repo_rel")" == ".p10k.zsh" ]] && continue
         if ! scan_secrets "$live_path" 2>/dev/null; then
@@ -289,8 +320,8 @@ cmd_pull() {
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
-        local live_path="${DIR_MAP[$repo_rel]}"
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local live_path="${DIR_VALS[$i]}"
         if [[ -d "$live_path" ]]; then
             while IFS= read -r -d '' f; do
                 if ! scan_secrets "$f" 2>/dev/null; then
@@ -314,9 +345,10 @@ cmd_pull() {
     local changes=0
     echo -e "${BOLD}Changes to pull:${NC}"
 
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$live_path" ]] || continue
 
@@ -326,13 +358,14 @@ cmd_pull() {
 
         if [[ ! -f "$repo_path" ]] || ! diff -q "$repo_path" "$live_path" &>/dev/null; then
             echo -e "  ${YELLOW}←${NC} $repo_rel"
-            ((changes++)) || true
+            changes=$((changes + 1))
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$live_path" ]] || continue
 
@@ -344,7 +377,7 @@ cmd_pull() {
         diff_count=$(diff -rq "$repo_path" "$live_path" 2>/dev/null | wc -l) || diff_count=999
         if [[ "$diff_count" -gt 0 ]]; then
             echo -e "  ${YELLOW}←${NC} $repo_rel/  ($diff_count files)"
-            ((changes++)) || true
+            changes=$((changes + 1))
         fi
     done
 
@@ -361,9 +394,10 @@ cmd_pull() {
     fi
 
     # Copy live → repo
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$live_path" ]] || continue
         [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path" && continue
@@ -374,9 +408,10 @@ cmd_pull() {
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$live_path" ]] || continue
         [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path" && continue
@@ -393,12 +428,13 @@ cmd_push() {
     echo -e "${BOLD}Pushing repo configs to live system...${NC}"
     echo ""
 
-    local changes=0
+    local changes=0 i
     echo -e "${BOLD}Changes to push:${NC}"
 
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$repo_path" ]] || continue
 
@@ -408,13 +444,14 @@ cmd_push() {
 
         if [[ ! -f "$live_path" ]] || ! diff -q "$repo_path" "$live_path" &>/dev/null; then
             echo -e "  ${YELLOW}→${NC} $repo_rel"
-            ((changes++)) || true
+            changes=$((changes + 1))
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$repo_path" ]] || continue
 
@@ -424,13 +461,13 @@ cmd_push() {
 
         if [[ ! -d "$live_path" ]]; then
             echo -e "  ${YELLOW}→${NC} $repo_rel/  (new)"
-            ((changes++)) || true
+            changes=$((changes + 1))
         else
             local diff_count
             diff_count=$(diff -rq "$repo_path" "$live_path" 2>/dev/null | wc -l) || diff_count=999
             if [[ "$diff_count" -gt 0 ]]; then
                 echo -e "  ${YELLOW}→${NC} $repo_rel/  ($diff_count files)"
-                ((changes++)) || true
+                changes=$((changes + 1))
             fi
         fi
     done
@@ -452,19 +489,20 @@ cmd_push() {
     backup_dir=$(make_backup_dir)
     echo -e "${BOLD}Backing up to $backup_dir${NC}"
 
-    for repo_rel in "${!FILE_MAP[@]}"; do
-        backup_item "${FILE_MAP[$repo_rel]}" "$backup_dir" "$repo_rel"
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        backup_item "${FILE_VALS[$i]}" "$backup_dir" "${FILE_KEYS[$i]}"
     done
-    for repo_rel in "${!DIR_MAP[@]}"; do
-        backup_item "${DIR_MAP[$repo_rel]}" "$backup_dir" "$repo_rel"
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        backup_item "${DIR_VALS[$i]}" "$backup_dir" "${DIR_KEYS[$i]}"
     done
 
     echo ""
 
     # Copy repo → live
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$repo_path" ]] || continue
         [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path" && continue
@@ -476,9 +514,10 @@ cmd_push() {
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$repo_path" ]] || continue
         [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path" && continue
@@ -499,11 +538,12 @@ cmd_link() {
     echo -e "${YELLOW}This is a one-time migration. Existing files will be backed up.${NC}"
     echo ""
 
-    local to_link=0
+    local to_link=0 i
 
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$repo_path" ]] || continue
 
@@ -511,13 +551,14 @@ cmd_link() {
             echo -e "  ${GREEN}already linked${NC}  $repo_rel"
         else
             echo -e "  ${YELLOW}will link${NC}       $repo_rel"
-            ((to_link++)) || true
+            to_link=$((to_link + 1))
         fi
     done
 
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$repo_path" ]] || continue
 
@@ -525,7 +566,7 @@ cmd_link() {
             echo -e "  ${GREEN}already linked${NC}  $repo_rel/"
         else
             echo -e "  ${YELLOW}will link${NC}       $repo_rel/"
-            ((to_link++)) || true
+            to_link=$((to_link + 1))
         fi
     done
 
@@ -547,23 +588,26 @@ cmd_link() {
     echo -e "${BOLD}Backing up to $backup_dir${NC}"
 
     # Link files
-    for repo_rel in "${!FILE_MAP[@]}"; do
+    for (( i=0; i<${#FILE_KEYS[@]}; i++ )); do
+        local repo_rel="${FILE_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${FILE_MAP[$repo_rel]}"
+        local live_path="${FILE_VALS[$i]}"
 
         [[ -f "$repo_path" ]] || continue
         is_repo_symlink "$live_path" "$repo_path" 2>/dev/null && continue
 
         backup_item "$live_path" "$backup_dir" "$repo_rel"
+        mkdir -p "$(dirname "$live_path")"
         rm -f "$live_path"
         ln -sf "$repo_path" "$live_path"
         echo -e "  ${GREEN}Linked${NC} $repo_rel → $live_path"
     done
 
     # Link directories
-    for repo_rel in "${!DIR_MAP[@]}"; do
+    for (( i=0; i<${#DIR_KEYS[@]}; i++ )); do
+        local repo_rel="${DIR_KEYS[$i]}"
         local repo_path="$REPO_DIR/$repo_rel"
-        local live_path="${DIR_MAP[$repo_rel]}"
+        local live_path="${DIR_VALS[$i]}"
 
         [[ -d "$repo_path" ]] || continue
         [[ -L "$live_path" ]] && is_repo_symlink "$live_path" "$repo_path" 2>/dev/null && continue
@@ -590,6 +634,8 @@ cmd_help() {
     echo "  push            Copy repo configs to live system (backs up first)"
     echo "  link            Replace live copies with symlinks to repo"
     echo "  help            Show this help"
+    echo ""
+    echo -e "${BOLD}Platform:${NC} $CURRENT_OS"
 }
 
 # ── Main ─────────────────────────────────────────────────────────────
