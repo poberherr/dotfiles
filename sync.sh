@@ -40,8 +40,8 @@ if [[ "$CURRENT_OS" == "Linux" ]]; then
     DIR_KEYS+=( ".config/hypr" ".config/waybar" ".config/mako" ".config/rofi" ".config/wofi" )
     DIR_VALS+=( "$HOME/.config/hypr" "$HOME/.config/waybar" "$HOME/.config/mako" "$HOME/.config/rofi" "$HOME/.config/wofi" )
 elif [[ "$CURRENT_OS" == "Darwin" ]]; then
-    FILE_KEYS+=( ".zshrc.darwin" )
-    FILE_VALS+=( "$HOME/.zshrc.darwin" )
+    FILE_KEYS+=( ".zshrc.darwin" "iterm2/catppuccin-mocha.json" )
+    FILE_VALS+=( "$HOME/.zshrc.darwin" "$HOME/Library/Application Support/iTerm2/DynamicProfiles/catppuccin-mocha.json" )
 fi
 
 # ── Helpers ──────────────────────────────────────────────────────────

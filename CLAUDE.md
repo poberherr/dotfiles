@@ -25,6 +25,7 @@ Cross-platform personal dotfiles for EndeavourOS + Hyprland (Linux) and macOS. D
 - **`.config/wofi/`** — Alternative Wayland launcher (Linux only)
 - **`.config/hyprwhspr/config.json`** — HyprWhisper speech-to-text (Linux only)
 - **`.config/kitty/kitty.conf`** — Terminal emulator (both platforms)
+- **`iterm2/catppuccin-mocha.json`** — iTerm2 Dynamic Profile with Catppuccin Mocha theme (macOS only)
 - **`.vimrc`** — Vim with vim-plug (both platforms)
 - **`.gitconfig`** — Git with SSH commit signing (both platforms)
 - **`.psqlrc`** — PostgreSQL client (both platforms)
@@ -57,7 +58,7 @@ The repo and live system configs may differ. Always check with `./sync.sh status
 
 **Linux only:** `.zshrc.linux`, `.config/hyprwhspr/config.json`, `.config/hypr`, `.config/waybar`, `.config/mako`, `.config/rofi`, `.config/wofi`
 
-**macOS only:** `.zshrc.darwin`
+**macOS only:** `.zshrc.darwin`, `iterm2/catppuccin-mocha.json` → iTerm2 DynamicProfiles
 
 ## Key Conventions
 
