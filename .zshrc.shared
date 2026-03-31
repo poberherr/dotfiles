@@ -1,0 +1,74 @@
+# .zshrc.shared — Config shared across Linux and macOS
+# Sourced by .zshrc on both platforms
+
+# ── oh-my-zsh ────────────────────────────────────────────────────────
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME=""  # Empty — using Powerlevel10k
+DISABLE_AUTO_TITLE="true"
+
+plugins=(git terraform aws direnv virtualenv asdf docker-compose)
+
+source $ZSH/oh-my-zsh.sh
+
+# ── Tool integrations ────────────────────────────────────────────────
+source <(fzf --zsh)
+eval "$(direnv hook zsh)"
+
+# ── Completions ──────────────────────────────────────────────────────
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+
+# ── Environment ──────────────────────────────────────────────────────
+export OP_BIOMETRIC_UNLOCK_ENABLED=true  # auto-approve 1Password CLI access
+export EDITOR='nvim'
+export GH_EDITOR='nvim'
+export PATH="$HOME/.local/bin:$PATH"
+
+# ── AWS ──────────────────────────────────────────────────────────────
+export AWS_PROFILE=patrick
+alias asl="aws sso login"
+
+# ── Git ──────────────────────────────────────────────────────────────
+alias gpom="git pull origin main"
+alias grc="git --rebase continue"
+
+# ── Docker ───────────────────────────────────────────────────────────
+alias dcd="docker-compose down"
+
+# ── Terraform ────────────────────────────────────────────────────────
+alias ti="terraform init"
+alias tp="terraform plan"
+alias taaa="terraform apply --auto-approve"
+
+# ── Tree ─────────────────────────────────────────────────────────────
+alias tr1="tree -L 1"
+alias tr2="tree -L 2"
+alias tr3="tree -L 3"
+alias tr4="tree -L 4"
+
+# ── Kamal ────────────────────────────────────────────────────────────
+alias kamal-old="$HOME/.gem/ruby/3.3.0/gems/kamal-1.9.2/bin/kamal"
+
+# ── Applications ─────────────────────────────────────────────────────
+alias v="nvim"
+alias ls="eza --icons=always"
+
+# ── Dotfiles ─────────────────────────────────────────────────────────
+alias dots="~/Development/dotfiles/sync.sh status"
+
+# ── Terminal title (git repo-aware) ──────────────────────────────────
+function _set_terminal_title() {
+  local repo
+  repo=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [[ -n "$repo" ]]; then
+    print -n "\e]2;${repo:t}\a"
+  else
+    print -n "\e]2;${PWD:t}\a"
+  fi
+}
+precmd_functions+=(_set_terminal_title)
+
+# ── zoxide (must be last) ────────────────────────────────────────────
+export _ZO_DOCTOR=0
+eval "$(zoxide init zsh)"
+alias cd="z"

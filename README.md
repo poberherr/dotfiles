@@ -1,31 +1,35 @@
 # Patrick's Dotfiles
 
-Personal dotfiles for EndeavourOS + Hyprland development setup.
+Cross-platform personal dotfiles for **EndeavourOS + Hyprland** (Linux) and **macOS**.
 
 ## What's Included
 
-### Shell
+### Shell (cross-platform)
 
-- `.zshrc` - Zsh configuration with oh-my-zsh, Powerlevel10k theme
-- `.zprofile` - Zsh profile
-- `.p10k.zsh` - Powerlevel10k prompt configuration
+| File | Deployed on | Purpose |
+|------|-------------|---------|
+| `.zshrc` | Both | Thin entrypoint — sources shared → platform → p10k → local |
+| `.zshrc.shared` | Both | oh-my-zsh, aliases, FZF, direnv, zoxide, shared PATH/env |
+| `.zshrc.linux` | Linux | NVM/p10k/zsh-plugins from `/usr/share/`, Hyprland aliases, Android SDK, jenv |
+| `.zshrc.darwin` | macOS | Homebrew setup, NVM/p10k/zsh-plugins from Homebrew paths |
+| `.zshrc.local` | Neither | Machine-specific secrets/overrides (untracked) |
 
-### Window Manager (Hyprland)
+### Window Manager (Hyprland — Linux only)
 
 - `.config/hypr/hyprland.conf` - Hyprland window manager config (NVIDIA optimized)
 
-### Status Bar & Notifications
+### Status Bar & Notifications (Linux only)
 
 - `.config/waybar/` - Waybar (status bar) config and styling
 - `.config/mako/config` - Mako notification daemon config
 
-### Application Launchers
+### Application Launchers (Linux only)
 
 - `.config/rofi/` - Rofi launcher config and themes
 - `.config/wofi/` - Wofi launcher config (Wayland native)
 - `bin/rofi-apps` - Custom rofi script
 
-### Terminal & Editors
+### Terminal & Editors (both platforms)
 
 - `.config/kitty/kitty.conf` - Kitty terminal config
 - `.vimrc` - Vim configuration
@@ -38,51 +42,47 @@ Personal dotfiles for EndeavourOS + Hyprland development setup.
 
 ## Installation
 
-### Prerequisites
-
-Install required packages on EndeavourOS/Arch:
+### macOS
 
 ```bash
-# Window manager & desktop
-sudo pacman -S hyprland waybar mako wofi rofi
-
-# Terminal & shell
-sudo pacman -S kitty zsh oh-my-zsh-git zsh-theme-powerlevel10k zsh-syntax-highlighting zsh-autosuggestions
-
-# CLI tools
-sudo pacman -S neovim eza zoxide fzf direnv
-
-# Clipboard & screenshots
-sudo pacman -S wl-clipboard cliphist hyprshot
-
-# Fonts
-sudo pacman -S ttf-jetbrains-mono-nerd ttf-font-awesome
-```
-
-### Deploy Dotfiles
-
-```bash
-# Clone the repo
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/Development/dotfiles
 cd ~/Development/dotfiles
 
-# Activate git hooks (secret scanning on commit)
-./setup-hooks.sh
+# Install all dependencies (Homebrew, shell tools, fonts, etc.)
+./setup-mac.sh
 
-# Create symlinks for all configs (backs up existing files first)
+# Activate git hooks + symlink configs
+./setup-hooks.sh
 ./sync.sh link
 ```
 
-### Post-Install
+### Linux (EndeavourOS/Arch)
 
-1. **Change shell to zsh**: `chsh -s /bin/zsh`
+```bash
+# Install prerequisites
+sudo pacman -S hyprland waybar mako wofi rofi
+sudo pacman -S kitty zsh oh-my-zsh-git zsh-theme-powerlevel10k zsh-syntax-highlighting zsh-autosuggestions
+sudo pacman -S neovim eza zoxide fzf direnv
+sudo pacman -S wl-clipboard cliphist hyprshot
+sudo pacman -S ttf-jetbrains-mono-nerd ttf-font-awesome
+
+# Clone and deploy
+git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/Development/dotfiles
+cd ~/Development/dotfiles
+./setup-hooks.sh
+./sync.sh link
+```
+
+### Post-Install (both platforms)
+
+1. **Change shell to zsh**: `chsh -s /bin/zsh` (if not already default)
 2. **Configure Powerlevel10k**: Run `p10k configure` for customization
-3. **Reload Hyprland**: `hyprctl reload` or log out and back in
-4. **Set up secrets**: Add any tokens/secrets to `~/.zshrc.local` (not tracked)
+3. **Set up secrets**: Add any tokens/secrets to `~/.zshrc.local` (not tracked)
+4. **Linux only**: `hyprctl reload` or log out and back in
 
 ## Syncing Configs
 
-The `sync.sh` script keeps your repo and live system in sync:
+The `sync.sh` script keeps your repo and live system in sync. It auto-detects your OS and only shows/deploys platform-relevant files.
 
 ```bash
 # Check what's different between repo and live system
@@ -126,7 +126,7 @@ Never commit secrets to this repo. Store tokens and credentials in `~/.zshrc.loc
 
 ## Customization
 
-### Monitor Setup
+### Monitor Setup (Linux)
 
 Edit `.config/hypr/hyprland.conf` to match your monitor configuration:
 
@@ -137,11 +137,11 @@ monitor=DP-3,preferred,2560x0,1
 
 Use `hyprctl monitors` to see available monitors.
 
-### NVIDIA Notes
+### NVIDIA Notes (Linux)
 
 The hyprland config includes NVIDIA-specific environment variables. Remove or modify these if using AMD/Intel.
 
-## Key Bindings (Hyprland)
+## Key Bindings (Hyprland — Linux)
 
 | Binding               | Action                   |
 | --------------------- | ------------------------ |

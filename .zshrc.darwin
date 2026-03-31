@@ -1,0 +1,15 @@
+# .zshrc.darwin — macOS-specific config
+# Sourced by .zshrc on Darwin only
+
+# ── Homebrew ─────────────────────────────────────────────────────────
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# ── NVM (Homebrew) ───────────────────────────────────────────────────
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && source "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# ── Powerlevel10k & zsh plugins (Homebrew) ───────────────────────────
+source "$(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme"
+source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
