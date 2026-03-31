@@ -117,7 +117,8 @@ source <(fzf --zsh)
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-export BROWSER="google-chrome.desktop"           # default web browser
+export OP_BIOMETRIC_UNLOCK_ENABLED=true            # auto-approve 1Password CLI access
+export BROWSER="google-chrome-stable"             # default web browser
 export EDITOR='nvim'
 export GH_EDITOR='nvim'
 
