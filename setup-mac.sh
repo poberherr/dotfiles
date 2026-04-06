@@ -56,10 +56,11 @@ brew install --quiet \
     rsync \
     uv
 
-# ── Terminal ─────────────────────────────────────────────────────────
+# ── Terminal & Window Management ──────────────────────────────────────
 echo ""
-echo -e "${BOLD}Installing terminal...${NC}"
+echo -e "${BOLD}Installing terminal & window management...${NC}"
 brew install --quiet --cask kitty
+brew install --quiet --cask nikitabobko/tap/aerospace
 
 # ── iTerm2 config ────────────────────────────────────────────────────
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
