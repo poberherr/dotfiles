@@ -54,13 +54,18 @@ brew install --quiet \
     tree \
     jq \
     rsync \
-    uv
+    uv \
+    libpq \
+    awscli
+
+brew link --force libpq
 
 # ── Terminal & Window Management ──────────────────────────────────────
 echo ""
 echo -e "${BOLD}Installing terminal & window management...${NC}"
 brew install --quiet --cask kitty
 brew install --quiet --cask nikitabobko/tap/aerospace
+brew install --quiet --cask 1password-cli
 
 # ── iTerm2 config ────────────────────────────────────────────────────
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
