@@ -42,6 +42,8 @@ if [[ "$CURRENT_OS" == "Linux" ]]; then
 elif [[ "$CURRENT_OS" == "Darwin" ]]; then
     FILE_KEYS+=( ".zshrc.darwin" "iterm2/catppuccin-mocha.json" ".aerospace.toml" )
     FILE_VALS+=( "$HOME/.zshrc.darwin" "$HOME/Library/Application Support/iTerm2/DynamicProfiles/catppuccin-mocha.json" "$HOME/.aerospace.toml" )
+    DIR_KEYS+=( ".config/ghostty" )
+    DIR_VALS+=( "$HOME/.config/ghostty" )
 fi
 
 # ── Helpers ──────────────────────────────────────────────────────────
