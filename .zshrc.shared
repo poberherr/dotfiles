@@ -58,10 +58,11 @@ alias dots="~/Development/dotfiles/sync.sh status"
 
 # ── Terminal title (git repo-aware) ──────────────────────────────────
 function _set_terminal_title() {
-  local repo
+  local repo branch
   repo=$(git rev-parse --show-toplevel 2>/dev/null)
   if [[ -n "$repo" ]]; then
-    print -n "\e]2;${repo:t}\a"
+    branch=$(git branch --show-current 2>/dev/null)
+    print -n "\e]2;${repo:t}${branch:+ ($branch)}\a"
   else
     print -n "\e]2;${PWD:t}\a"
   fi

@@ -65,6 +65,7 @@ echo ""
 echo -e "${BOLD}Installing terminal & window management...${NC}"
 brew install --quiet --cask kitty
 brew install --quiet --cask nikitabobko/tap/aerospace
+brew install --quiet --cask orbstack
 brew install --quiet --cask 1password-cli
 
 # ── iTerm2 config ────────────────────────────────────────────────────

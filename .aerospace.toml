@@ -28,7 +28,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 automatically-unhide-macos-hidden-apps = false
 
-persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
+persistent-workspaces = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
                          "C", "D", "E", "G", "I", "M", "N", "O", "P", "Q",
                          "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
@@ -51,8 +51,8 @@ on-mode-changed = []
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'
 
-    # Fullscreen
-    alt-shift-f = 'fullscreen'
+    # Fullscreen (ctrl+alt family — ergonomic on Glove80)
+    ctrl-alt-f = 'fullscreen'
 
     # Focus
     alt-h = 'focus left'
@@ -71,6 +71,7 @@ on-mode-changed = []
     alt-equal = 'resize smart +50'
 
     # Workspaces
+    alt-0 = 'workspace 0'
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
@@ -104,6 +105,7 @@ on-mode-changed = []
     alt-z = 'workspace Z'
 
     # Move node to workspace
+    alt-shift-0 = 'move-node-to-workspace 0'
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
     alt-shift-3 = 'move-node-to-workspace 3'
@@ -118,7 +120,7 @@ on-mode-changed = []
     alt-shift-c = 'move-node-to-workspace C'
     alt-shift-d = 'move-node-to-workspace D'
     alt-shift-e = 'move-node-to-workspace E'
-    # alt-shift-f remapped to fullscreen (above)
+    alt-shift-f = 'move-node-to-workspace F'
     alt-shift-g = 'move-node-to-workspace G'
     alt-shift-i = 'move-node-to-workspace I'
     alt-shift-m = 'move-node-to-workspace M'
