@@ -53,6 +53,7 @@ on-mode-changed = []
 
     # Fullscreen (ctrl+alt family — ergonomic on Glove80)
     ctrl-alt-f = 'fullscreen'
+    cmd-shift-t = 'fullscreen'
 
     # Focus
     alt-h = 'focus left'
@@ -145,6 +146,11 @@ on-mode-changed = []
 
     # Enter service mode
     alt-shift-semicolon = 'mode service'
+
+# Float apps that don't tile well
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
 
 # Service binding mode
 [mode.service.binding]

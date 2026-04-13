@@ -1,4 +1,5 @@
 # Ghostty configuration
+theme = cobalt2
 
 # Pane navigation (Ctrl+Alt+hjkl)
 keybind = ctrl+alt+h=goto_split:left
@@ -7,7 +8,13 @@ keybind = ctrl+alt+k=goto_split:top
 keybind = ctrl+alt+l=goto_split:right
 
 # Pane zoom (toggle fullscreen for current pane)
-keybind = ctrl+alt+enter=toggle_split_zoom
+keybind = ctrl+shift+enter=toggle_split_zoom
+
+# OS native fullscreen
+keybind = cmd+shift+enter=toggle_fullscreen
+
+# Minimal tab bar (native macOS tabs without full title bar)
+macos-titlebar-style = tabs
 
 # Pane split divider
 split-divider-color = #89b4fa
