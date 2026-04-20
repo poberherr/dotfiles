@@ -26,12 +26,12 @@ NC='\033[0m'
 # Works on bash 3.2+ (macOS) — no associative arrays needed
 
 # Shared files (both platforms)
-FILE_KEYS=( ".zshrc" ".zshrc.shared" ".zprofile" ".p10k.zsh" ".vimrc" ".gitconfig" ".psqlrc" )
-FILE_VALS=( "$HOME/.zshrc" "$HOME/.zshrc.shared" "$HOME/.zprofile" "$HOME/.p10k.zsh" "$HOME/.vimrc" "$HOME/.gitconfig" "$HOME/.psqlrc" )
+FILE_KEYS=( ".zshrc" ".zshrc.shared" ".zprofile" ".p10k.zsh" ".vimrc" ".gitconfig" ".psqlrc" ".config/opencode/opencode.json" )
+FILE_VALS=( "$HOME/.zshrc" "$HOME/.zshrc.shared" "$HOME/.zprofile" "$HOME/.p10k.zsh" "$HOME/.vimrc" "$HOME/.gitconfig" "$HOME/.psqlrc" "$HOME/.config/opencode/opencode.json" )
 
 # Shared directories (both platforms)
-DIR_KEYS=( ".config/kitty" )
-DIR_VALS=( "$HOME/.config/kitty" )
+DIR_KEYS=( ".config/kitty" ".config/opencode/skills" )
+DIR_VALS=( "$HOME/.config/kitty" "$HOME/.config/opencode/skills" )
 
 # Platform-specific additions
 if [[ "$CURRENT_OS" == "Linux" ]]; then

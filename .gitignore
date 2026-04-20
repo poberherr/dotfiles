@@ -24,3 +24,10 @@ credentials.json
 !.claude/settings.local.json
 !.claude/rules/
 !.claude/rules/*.md
+
+# opencode node junk (tracked: opencode.json + skills/)
+.config/opencode/node_modules/
+.config/opencode/package.json
+.config/opencode/package-lock.json
+.config/opencode/bun.lock
+.config/opencode/.gitignore
