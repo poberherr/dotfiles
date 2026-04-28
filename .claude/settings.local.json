@@ -48,7 +48,16 @@
       "Bash(gh api:*)",
       "Bash(chmod +x:*)",
       "Bash(~/Development/dotfiles/bin/hyprwhspr-waybar status:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(opencode --version)",
+      "Read(//Users/patrick/.config/opencode/**)",
+      "Read(//Users/patrick/**)",
+      "Bash(brew info *)",
+      "Bash(opencode run *)",
+      "Bash(opencode models *)",
+      "Bash(curl -s https://models.dev/api.json)",
+      "Read(//opt/homebrew/Cellar/opencode/1.4.10/bin/**)",
+      "Read(//opt/homebrew/Cellar/opencode/1.4.10/libexec/**)"
     ]
   }
 }

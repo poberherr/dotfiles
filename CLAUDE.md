@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Cross-platform personal dotfiles for EndeavourOS + Hyprland (Linux) and macOS. Deployment is via symlinks managed by `sync.sh` from `~/Development/dotfiles/` to `$HOME`. The shell config is split into shared and platform-specific modules; `sync.sh` auto-detects the OS and only deploys relevant files.
 
+For Claude Code / opencode skill stack, memory model, auth, and worktree workflow conventions, see `CLAUDE-tooling.md` in this repo.
+
 ## Repository Structure
 
 ### Shell (modular)

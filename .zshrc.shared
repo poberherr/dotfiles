@@ -56,6 +56,11 @@ alias ls="eza --icons=always"
 # ── Dotfiles ─────────────────────────────────────────────────────────
 alias dots="~/Development/dotfiles/sync.sh status"
 
+# ── opencode openai auth toggle (oauth ↔ api key overflow) ────────────
+alias ocauth="~/Development/dotfiles/bin/opencode-auth.sh"
+alias ocapi="~/Development/dotfiles/bin/opencode-auth.sh to-api"
+alias octeam="~/Development/dotfiles/bin/opencode-auth.sh to-oauth"
+
 # ── Terminal title (git repo-aware) ──────────────────────────────────
 function _set_terminal_title() {
   local repo branch
