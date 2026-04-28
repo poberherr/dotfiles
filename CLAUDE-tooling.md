@@ -34,6 +34,16 @@ git -C ~/Development/ai-dev-kit pull
 
 Both `claude` and `opencode` see this dir automatically — no separate opencode install.
 
+### Bridging plugin skills to opencode
+
+Plugin skills (Superpowers, Impeccable) live at `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/skills/` — opencode does **not** scan that path. Bridge them into `~/.claude/skills/` with:
+
+```bash
+~/Development/dotfiles/bin/sync-claude-plugin-skills.sh
+```
+
+Run this **after every `/plugin install` or `/plugin update`** in Claude Code. The script symlinks the latest version dir, so plugin upgrades just need a re-run.
+
 ## Claude Code ↔ opencode parity
 
 | Concept | Claude Code | opencode |
@@ -47,7 +57,7 @@ Both `claude` and `opencode` see this dir automatically — no separate opencode
 | Model switch | `/model` | `/model` or `model` field in `~/.config/opencode/opencode.json` |
 | Refresh model list | `claude doctor` (rare) | `opencode models --refresh` |
 
-opencode auto-discovers Claude skills from `~/.claude/skills/` — install once, both tools see it.
+opencode auto-discovers anything inside `~/.claude/skills/`. Skills installed as raw `SKILL.md` dirs (e.g. databricks) are read directly. Skills shipped via plugin marketplace need bridging — see "Bridging plugin skills to opencode" above.
 
 ## opencode auth toggle (oauth ↔ API key overflow)
 
