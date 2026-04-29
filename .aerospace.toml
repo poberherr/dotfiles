@@ -53,7 +53,7 @@ on-mode-changed = []
 
     # Fullscreen (ctrl+alt family — ergonomic on Glove80)
     ctrl-alt-f = 'fullscreen'
-    cmd-shift-t = 'fullscreen'
+    cmd-shift-enter = 'fullscreen'
 
     # Focus
     alt-h = 'focus left'
