@@ -23,7 +23,15 @@ Existing in this setup: `frontend-design`, `code-review`, `caveman`, `ccrc`, `sw
 
 /plugin marketplace add pbakaus/impeccable
 /plugin install impeccable@impeccable
+
+/plugin marketplace add JuliusBrussee/caveman
+/plugin install caveman@caveman
+
+/plugin marketplace add poberherr/ccrc
+/plugin install ccrc@ccrc
 ```
+
+Plugins live at `~/.claude/plugins/` — outside the brew cask. `brew reinstall claude-code@latest` does **not** wipe them. Reinstall only required if `~/.claude/plugins/` is deleted.
 
 ### Hex CLI (app.hex.tech)
 
