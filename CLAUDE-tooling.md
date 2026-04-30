@@ -9,6 +9,7 @@ Reference companion to `CLAUDE.md`. Covers skill stack, memory model, auth, and 
 | **Superpowers** | Larger features (multi-file, multi-step). Brainstorm → spec → plan → subagent execute → two-stage review. | High tokens. Skip for small fixes. | Replaces vanilla `/plan` mode. Each subagent gets fresh ctx, exact paths, pre-written commit msg. Auto-creates `worktree-*` branches via `using-git-worktrees`. |
 | **Impeccable** | UI/frontend polish: typography, color, layout, micro-interactions. Audit → critique → polish. | Medium. | Builds on Anthropic's `frontend-design`. 23 commands (`polish`, `audit`, `critique`, `typeset`, `colorize`, `delight`...). Two modes: `brand` vs `product`. |
 | **databricks-ai-dev-kit** | Anything Databricks: Spark, Jobs, DLT/SDP, Unity Catalog, Vector Search, Model Serving, Lakebase, Apps. | Medium (skill auto-loads). | 20+ sub-skills under `~/.claude/skills/databricks/`. Pulls patterns from official Databricks docs — beats Claude's stale guesswork. |
+| **hex** (app.hex.tech CLI) | Driving Hex projects/apps/cells from terminal — create, run, query, manage connections. | Low (single skill). | Binary `/opt/homebrew/bin/hex` from tap `hex-inc/hex-cli`. Skill installed via `hex install agent-skill --claude` (add `--global` for system-wide). |
 
 Existing in this setup: `frontend-design`, `code-review`, `caveman`, `ccrc`, `swift-lsp`. Don't double-install.
 
@@ -22,6 +23,14 @@ Existing in this setup: `frontend-design`, `code-review`, `caveman`, `ccrc`, `sw
 
 /plugin marketplace add pbakaus/impeccable
 /plugin install impeccable@impeccable
+```
+
+### Hex CLI (app.hex.tech)
+
+```bash
+brew install hex-inc/hex-cli/hex
+hex auth login
+hex install agent-skill --claude --global   # system-wide skill (drop --global for cwd only)
 ```
 
 ### Databricks (already installed via this dotfiles repo)
