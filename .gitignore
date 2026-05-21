@@ -19,11 +19,15 @@ id_rsa
 id_ed25519
 credentials.json
 
-# Claude Code (keep project settings and rules, ignore auth/cache)
+# Claude Code (keep settings/rules/skills/CLAUDE.md, ignore auth/cache/state)
 .claude/*
+!.claude/settings.json
 !.claude/settings.local.json
+!.claude/CLAUDE.md
 !.claude/rules/
 !.claude/rules/*.md
+!.claude/skills/
+!.claude/skills/**
 
 # opencode node junk (tracked: opencode.json + skills/)
 .config/opencode/node_modules/

@@ -26,8 +26,8 @@ NC='\033[0m'
 # Works on bash 3.2+ (macOS) — no associative arrays needed
 
 # Shared files (both platforms)
-FILE_KEYS=( ".zshrc" ".zshrc.shared" ".zprofile" ".p10k.zsh" ".vimrc" ".gitconfig" ".psqlrc" ".config/opencode/opencode.json" )
-FILE_VALS=( "$HOME/.zshrc" "$HOME/.zshrc.shared" "$HOME/.zprofile" "$HOME/.p10k.zsh" "$HOME/.vimrc" "$HOME/.gitconfig" "$HOME/.psqlrc" "$HOME/.config/opencode/opencode.json" )
+FILE_KEYS=( ".zshrc" ".zshrc.shared" ".zprofile" ".p10k.zsh" ".vimrc" ".gitconfig" ".psqlrc" ".config/opencode/opencode.json" ".claude/settings.json" ".claude/CLAUDE.md" )
+FILE_VALS=( "$HOME/.zshrc" "$HOME/.zshrc.shared" "$HOME/.zprofile" "$HOME/.p10k.zsh" "$HOME/.vimrc" "$HOME/.gitconfig" "$HOME/.psqlrc" "$HOME/.config/opencode/opencode.json" "$HOME/.claude/settings.json" "$HOME/.claude/CLAUDE.md" )
 
 # Shared directories (both platforms)
 DIR_KEYS=( ".config/kitty" ".config/opencode/skills" )

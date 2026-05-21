@@ -32,6 +32,11 @@ For Claude Code / opencode skill stack, memory model, auth, and worktree workflo
 - **`.vimrc`** — Vim with vim-plug (both platforms)
 - **`.gitconfig`** — Git with SSH commit signing (both platforms)
 - **`.psqlrc`** — PostgreSQL client (both platforms)
+- **`.claude/settings.json`** — Claude Code global config (enabled plugins, model, statusLine, extra marketplaces)
+- **`.claude/CLAUDE.md`** — Claude Code global user instructions (subagent-first, append-not-force git ops)
+- **`.claude/skills/`** — Personal Claude Code skills (e.g. `hex/`)
+- **`.config/opencode/opencode.json`** — opencode config (model + remote MCPs: enam, linear, notion)
+- **`.config/opencode/skills/`** — Personal opencode skills (bridged from `.claude/` via `bin/sync-claude-plugin-skills.sh`)
 
 ### Scripts
 
@@ -57,7 +62,7 @@ The repo and live system configs may differ. ALWAYS run `./sync.sh status` befor
 
 `sync.sh` detects the OS via `uname -s` and merges platform-specific maps into the shared maps.
 
-**Shared (both):** `.zshrc`, `.zshrc.shared`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc`, `.config/kitty`
+**Shared (both):** `.zshrc`, `.zshrc.shared`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc`, `.config/kitty`, `.config/opencode/opencode.json`, `.config/opencode/skills`, `.claude/settings.json`, `.claude/CLAUDE.md`
 
 **Linux only:** `.zshrc.linux`, `.config/hyprwhspr/config.json`, `.config/hypr`, `.config/waybar`, `.config/mako`, `.config/rofi`, `.config/wofi`
 

@@ -25,7 +25,7 @@ export GH_EDITOR='nvim'
 export PATH="$HOME/.local/bin:$PATH"
 
 # ── AWS ──────────────────────────────────────────────────────────────
-export AWS_PROFILE=patrick
+export AWS_PROFILE=enam-dev
 alias asl="aws sso login"
 
 # ── Git ──────────────────────────────────────────────────────────────
