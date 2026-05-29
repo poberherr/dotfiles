@@ -1,8 +1,10 @@
 {
   "permissions": {
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "~/Downloads/"
+    ]
   },
-  "model": "claude-opus-4-7",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/ccrc-statusline.sh"
@@ -49,7 +51,7 @@
       }
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
 }

@@ -56,6 +56,11 @@ alias ls="eza --icons=always"
 # ── Dotfiles ─────────────────────────────────────────────────────────
 alias dots="~/Development/dotfiles/sync.sh status"
 
+# ── Claude Code ──────────────────────────────────────────────────────
+# ultracode = xhigh reasoning + auto workflow orchestration. Session-only
+# flag, not persistable in settings.json — opt in per launch via this alias.
+alias ultracode='claude --settings "{\"ultracode\": true}"'
+
 # ── opencode openai auth toggle (oauth ↔ api key overflow) ────────────
 alias ocauth="~/Development/dotfiles/bin/opencode-auth.sh"
 alias ocapi="~/Development/dotfiles/bin/opencode-auth.sh to-api"
