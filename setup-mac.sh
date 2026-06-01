@@ -68,6 +68,22 @@ brew install --quiet --cask nikitabobko/tap/aerospace
 brew install --quiet --cask orbstack
 brew install --quiet --cask 1password-cli
 
+# ── Trust third-party taps ───────────────────────────────────────────
+# Homebrew will require explicit trust for non-official taps in a future
+# release. Pre-trust the taps used on this machine so brew won't warn (or
+# later refuse to load them). Trust is recorded per-machine, not in this
+# repo, so it must be re-applied on each new Mac. (hex-inc/hex-cli left
+# untrusted on purpose.)
+echo ""
+echo -e "${BOLD}Trusting third-party taps...${NC}"
+for t in nikitabobko/tap databricks/tap \
+         enam-co/tap bike-shed-io/latent-space \
+         bike-shed-io/vibez typewhisper/tap; do
+    brew trust --tap "$t" 2>/dev/null \
+        && echo -e "${GREEN}trusted${NC} $t" \
+        || echo -e "${YELLOW}skip${NC}    $t (not tapped yet)"
+done
+
 # ── iTerm2 config ────────────────────────────────────────────────────
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 if defaults read com.googlecode.iterm2 &>/dev/null 2>&1; then
