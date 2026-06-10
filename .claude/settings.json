@@ -5,6 +5,7 @@
       "~/Downloads/"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/ccrc-statusline.sh"
@@ -17,7 +18,8 @@
     "ccrc@ccrc": true,
     "superpowers@claude-plugins-official": true,
     "impeccable@impeccable": true,
-    "notion-workspace-plugin@notion-plugin-marketplace": true
+    "notion-workspace-plugin@notion-plugin-marketplace": true,
+    "understand-anything@understand-anything": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -48,6 +50,12 @@
       "source": {
         "source": "github",
         "repo": "makenotion/claude-code-notion-plugin"
+      }
+    },
+    "understand-anything": {
+      "source": {
+        "source": "github",
+        "repo": "Lum1104/Understand-Anything"
       }
     }
   },

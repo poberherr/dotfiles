@@ -59,7 +59,9 @@ alias dots="~/Development/dotfiles/sync.sh status"
 # ── Claude Code ──────────────────────────────────────────────────────
 # ultracode = xhigh reasoning + auto workflow orchestration. Session-only
 # flag, not persistable in settings.json — opt in per launch via this alias.
-alias ultracode='claude --settings "{\"ultracode\": true}"'
+# Model + effort pinned here too: --settings outranks project settings.json,
+# so uc is always Fable 5 (1M ctx) at xhigh, regardless of project overrides.
+alias ultracode='claude --settings "{\"ultracode\": true, \"model\": \"claude-fable-5[1m]\", \"effortLevel\": \"xhigh\"}"'
 alias uc=ultracode
 
 # ── opencode openai auth toggle (oauth ↔ api key overflow) ────────────
