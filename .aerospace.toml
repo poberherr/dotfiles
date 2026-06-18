@@ -45,11 +45,16 @@ on-mode-changed = []
     outer.top =        0
     outer.right =      0
 
+# NOTE: AeroSpace does NOT watch this file. After editing bindings, run
+# `aerospace reload-config` (or restart the app), else hotkeys go stale and
+# alt-shortcuts silently stop firing while the WM keeps tiling windows.
 [mode.main.binding]
 
     # Layout
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'
+    # Toggle orientation only (horizontal <-> vertical), keep tiles/accordion
+    alt-shift-slash = 'layout horizontal vertical'
 
     # Fullscreen (ctrl+alt family — ergonomic on Glove80)
     ctrl-alt-f = 'fullscreen'
