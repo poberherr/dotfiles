@@ -19,7 +19,8 @@
     "superpowers@claude-plugins-official": true,
     "impeccable@impeccable": true,
     "notion-workspace-plugin@notion-plugin-marketplace": true,
-    "understand-anything@understand-anything": true
+    "understand-anything@understand-anything": true,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -57,9 +58,16 @@
         "source": "github",
         "repo": "Lum1104/Understand-Anything"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
     }
   },
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
 }
