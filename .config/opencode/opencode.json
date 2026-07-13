@@ -5,7 +5,8 @@
     "enam-mcp": {
       "type": "remote",
       "url": "https://mcp.analytics.enam.co/mcp",
-      "enabled": true
+      "enabled": true,
+      "timeout": 90000
     },
     "linear": {
       "type": "remote",
