@@ -15,7 +15,7 @@ For Claude Code / opencode skill stack, memory model, auth, and worktree workflo
 - **`.zshrc`** — Thin entrypoint: sources shared → platform → p10k → local
 - **`.zshrc.shared`** — oh-my-zsh, aliases, FZF, direnv, zoxide, shared PATH/env (both platforms)
 - **`.zshrc.linux`** — NVM/p10k/zsh-plugins from `/usr/share/`, Hyprland aliases, Android SDK, jenv (Linux only)
-- **`.zshrc.darwin`** — Homebrew setup, NVM/p10k/zsh-plugins from Homebrew paths (macOS only)
+- **`.zshrc.darwin`** — Homebrew setup, NVM/p10k/zsh-plugins from Homebrew paths, tfenv on PATH (macOS only)
 - **`.zshrc.local`** — Machine-specific secrets/overrides (untracked)
 
 ### Configs

@@ -56,9 +56,24 @@ brew install --quiet \
     rsync \
     uv \
     libpq \
-    awscli
+    awscli \
+    grep
 
 brew link --force libpq
+
+# ── tfenv (Terraform version manager) ────────────────────────────────
+# Deliberately NOT `brew install tfenv`: that formula declares
+# conflicts_with "terraform", so brew would force-unlink any brew
+# terraform. Git clone keeps both resolvable. Needs GNU grep (the
+# `grep` formula above) — tfenv hard-errors on macOS without it.
+if [[ ! -d "$HOME/.tfenv" ]]; then
+    echo -e "${YELLOW}Installing tfenv...${NC}"
+    git clone --depth=1 https://github.com/tfutils/tfenv.git "$HOME/.tfenv"
+    "$HOME/.tfenv/bin/tfenv" install latest
+    "$HOME/.tfenv/bin/tfenv" use latest
+else
+    echo -e "${GREEN}tfenv already installed${NC}"
+fi
 
 # ── Terminal & Window Management ──────────────────────────────────────
 echo ""

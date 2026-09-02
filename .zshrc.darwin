@@ -16,3 +16,10 @@ export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agen
 source "$(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme"
 source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# ── tfenv (Terraform version manager) ────────────────────────────────
+# Git-cloned to ~/.tfenv, NOT brew — the tfenv formula declares
+# conflicts_with "terraform", so brew-installing it forces a
+# `brew unlink terraform`. Prepended ahead of /opt/homebrew/bin so the
+# tfenv shim wins over any brew terraform.
+[ -d "$HOME/.tfenv/bin" ] && export PATH="$HOME/.tfenv/bin:$PATH"
