@@ -22,7 +22,6 @@ credentials.json
 # Claude Code (keep settings/rules/skills/CLAUDE.md, ignore auth/cache/state)
 .claude/*
 !.claude/settings.json
-!.claude/settings.local.json
 !.claude/CLAUDE.md
 !.claude/rules/
 !.claude/rules/*.md

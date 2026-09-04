@@ -5,9 +5,14 @@
       "~/Downloads/"
     ]
   },
+  "model": "fable[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/ccrc-statusline.sh"
+  },
+  "subagentStatusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/ccrc-subagent-statusline.sh"
   },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
