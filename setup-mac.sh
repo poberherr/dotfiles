@@ -45,6 +45,9 @@ fi
 echo ""
 echo -e "${BOLD}Installing CLI tools...${NC}"
 brew install --quiet \
+    git \
+    gh \
+    gnupg \
     neovim \
     eza \
     zoxide \
@@ -57,9 +60,25 @@ brew install --quiet \
     uv \
     libpq \
     awscli \
-    grep
+    grep \
+    fd \
+    ripgrep \
+    the_silver_searcher \
+    lazygit \
+    lazysql \
+    yq \
+    helm \
+    go \
+    xcodegen \
+    temporal \
+    hcloud \
+    openvpn \
+    oath-toolkit
 
 brew link --force libpq
+
+# Tapped formula — full path auto-taps databricks/tap.
+brew install --quiet databricks/tap/databricks
 
 # ── tfenv (Terraform version manager) ────────────────────────────────
 # Deliberately NOT `brew install tfenv`: that formula declares
@@ -79,8 +98,18 @@ fi
 echo ""
 echo -e "${BOLD}Installing terminal & window management...${NC}"
 brew install --quiet --cask kitty
+brew install --quiet --cask ghostty
+brew install --quiet --cask iterm2
 brew install --quiet --cask nikitabobko/tap/aerospace
 brew install --quiet --cask orbstack
+brew install --quiet --cask cursor
+brew install --quiet --cask tableplus
+brew install --quiet --cask ngrok
+brew install --quiet --cask gcloud-cli
+brew install --quiet --cask karabiner-elements
+# 1Password itself, not just the CLI: .zshrc.darwin points SSH_AUTH_SOCK at its
+# agent socket and .gitconfig signs commits with that SSH key.
+brew install --quiet --cask 1password
 brew install --quiet --cask 1password-cli
 
 # ── Trust third-party taps ───────────────────────────────────────────
@@ -116,6 +145,7 @@ fi
 echo ""
 echo -e "${BOLD}Installing fonts...${NC}"
 brew install --quiet --cask font-jetbrains-mono-nerd-font
+brew install --quiet --cask font-symbols-only-nerd-font
 
 # ── macOS Defaults ────────────────────────────────────────────────────
 echo ""
