@@ -164,6 +164,17 @@ if [[ ! -f "$NVM_DIR/nvm.sh" ]] && [[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]]; then
     echo -e "${GREEN}NVM initialized${NC}"
 fi
 
+# ── AI coding CLIs ───────────────────────────────────────────────────
+echo ""
+echo -e "${BOLD}Installing AI coding CLIs...${NC}"
+brew install --quiet --cask claude-code@latest codex
+# opencode via npm, not brew: the brew formula lags releases.
+if command -v npm &>/dev/null; then
+    npm install -g opencode-ai
+else
+    echo -e "${YELLOW}npm not found — later: nvm install --lts && npm install -g opencode-ai${NC}"
+fi
+
 # ── Deploy dotfiles ──────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}Setup complete!${NC}"
@@ -174,3 +185,5 @@ echo -e "  2. ${CYAN}./sync.sh link${NC}           # symlink configs to home"
 echo -e "  3. ${CYAN}chsh -s /bin/zsh${NC}         # set default shell (if not already zsh)"
 echo -e "  4. Open a new terminal and run ${CYAN}p10k configure${NC}"
 echo -e "  5. Add secrets to ${CYAN}~/.zshrc.local${NC}"
+echo -e "  6. ${CYAN}codex mcp login enam-mcp && codex mcp login notion${NC}   # MCP OAuth, per machine"
+echo -e "  7. ${CYAN}claude${NC} → /login, then plugin installs from CLAUDE-tooling.md"

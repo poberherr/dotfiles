@@ -1,6 +1,6 @@
-# Claude Code + opencode tooling cheatsheet
+# Claude Code + opencode + Codex tooling cheatsheet
 
-Reference companion to `CLAUDE.md`. Covers skill stack, memory model, auth, and workflow conventions used in this dotfiles env.
+Reference companion to `CLAUDE.md`. Covers skill stack, memory model, auth, MCP servers, per-machine setup, and workflow conventions used in this dotfiles env.
 
 ## Skill stack (when to reach for what)
 
@@ -61,18 +61,64 @@ Plugin skills (Superpowers, Impeccable) live at `~/.claude/plugins/cache/<market
 
 Run this **after every `/plugin install` or `/plugin update`** in Claude Code. The script symlinks the latest version dir, so plugin upgrades just need a re-run.
 
-## Claude Code ↔ opencode parity
+## MCP servers (which tool sees what)
 
-| Concept | Claude Code | opencode |
-|---|---|---|
-| Project memory | `CLAUDE.md` (root, `/init` to bootstrap) | `AGENTS.md` (root, `/init` to bootstrap) |
-| Subdir memory | nested `CLAUDE.md` walked up from cwd | nested `AGENTS.md` walked up from cwd to git root |
-| Global memory | `~/.claude/CLAUDE.md` | `~/.config/opencode/AGENTS.md` |
-| Skills dir | `~/.claude/skills/<name>/SKILL.md` | reads `~/.claude/skills/`, `~/.config/opencode/skills/`, `.opencode/skills/`, `.claude/skills/` |
-| Plugins | `/plugin marketplace add ...` + `/plugin install ...` | no plugin marketplace; install via skills or `.opencode/agents/` |
-| Auth | `/login` (Anthropic) | `opencode auth login <provider>` |
-| Model switch | `/model` | `/model` or `model` field in `~/.config/opencode/opencode.json` |
-| Refresh model list | `claude doctor` (rare) | `opencode models --refresh` |
+Remote (streamable HTTP) servers, all OAuth. Config lives in three places; only two are tracked here.
+
+| Server | URL | Claude Code | opencode | Codex |
+|---|---|---|---|---|
+| enam-mcp | `https://mcp.analytics.enam.co/mcp` | — | ✓ | ✓ |
+| notion | `https://mcp.notion.com/mcp` | via Notion plugin | ✓ | ✓ |
+| linear | `https://mcp.linear.app/mcp` | — | ✓ | — |
+| atlassian | `https://mcp.atlassian.com/v1/mcp/authv2` | ✓ | ✓ | — |
+| datadog-mcp | `https://mcp.datadoghq.com/api/unstable/mcp-server/mcp` | ✓ | — | — |
+| miro | `https://mcp.miro.com` | ✓ | — | — |
+
+| Tool | Where configured | Tracked? | Add | Login |
+|---|---|---|---|---|
+| Claude Code | `~/.claude.json` → `mcpServers` | **no** (file also holds auth/state) | `claude mcp add --transport http <name> <url>` | `/mcp` in REPL |
+| opencode | `~/.config/opencode/opencode.json` → `mcp` | yes (symlinked) | edit file | first use prompts OAuth |
+| Codex | `~/.codex/config.toml` → `[mcp_servers.<name>]` | yes (symlinked) | `codex mcp add <name> --url <url>` | `codex mcp login <name>`; `codex mcp list` shows status |
+
+Tokens never live in the tracked files (Codex keeps MCP OAuth in the OS keyring, opencode in `~/.local/share/opencode/auth.json`). Every new machine re-runs the logins — see "Per-machine setup".
+
+## Per-machine setup (not codified, run once per box)
+
+What `setup-mac.sh` / `./sync.sh link` do **not** cover. Same list on Linux.
+
+```bash
+# 1. auth
+claude            # /login
+codex login
+opencode auth login openai
+
+# 2. MCP OAuth (config already synced; tokens are per machine)
+codex mcp login enam-mcp && codex mcp login notion
+claude mcp add --transport http atlassian https://mcp.atlassian.com/v1/mcp/authv2
+claude mcp add --transport http datadog-mcp https://mcp.datadoghq.com/api/unstable/mcp-server/mcp
+claude mcp add --transport http miro https://mcp.miro.com
+
+# 3. Claude plugins (see "Install commands" above), then bridge to opencode
+~/Development/dotfiles/bin/sync-claude-plugin-skills.sh
+
+# 4. Databricks skills symlink (see "Databricks" above)
+```
+
+Linux install of the CLIs themselves: `npm install -g @openai/codex opencode-ai` (node via nvm, see `.zshrc.linux`) and `curl -fsSL https://claude.ai/install.sh | bash`. Everything else in `setup-mac.sh` maps to pacman/yay — translate, don't skip.
+
+## Claude Code ↔ opencode ↔ Codex parity
+
+| Concept | Claude Code | opencode | Codex |
+|---|---|---|---|
+| Project memory | `CLAUDE.md` (root, `/init` to bootstrap) | `AGENTS.md` (root, `/init` to bootstrap) | `AGENTS.md` (root) |
+| Subdir memory | nested `CLAUDE.md` walked up from cwd | nested `AGENTS.md` walked up from cwd to git root | nested `AGENTS.md` |
+| Global memory | `~/.claude/CLAUDE.md` | `~/.config/opencode/AGENTS.md` | `~/.codex/AGENTS.md` |
+| Skills dir | `~/.claude/skills/<name>/SKILL.md` | reads `~/.claude/skills/`, `~/.config/opencode/skills/`, `.opencode/skills/`, `.claude/skills/` | `~/.codex/skills/` |
+| Plugins | `/plugin marketplace add ...` + `/plugin install ...` | no plugin marketplace; install via skills or `.opencode/agents/` | n/a |
+| Auth | `/login` (Anthropic) | `opencode auth login <provider>` | `codex login` |
+| Model switch | `/model` | `/model` or `model` field in `~/.config/opencode/opencode.json` | `/model` or `model` in `~/.codex/config.toml` |
+| Refresh model list | `claude doctor` (rare) | `opencode models --refresh` | n/a |
+| MCP config | `~/.claude.json` (untracked) | `opencode.json` (tracked) | `~/.codex/config.toml` (tracked) |
 
 opencode auto-discovers anything inside `~/.claude/skills/`. Skills installed as raw `SKILL.md` dirs (e.g. databricks) are read directly. Skills shipped via plugin marketplace need bridging — see "Bridging plugin skills to opencode" above.
 

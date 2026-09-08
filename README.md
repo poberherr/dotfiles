@@ -66,6 +66,10 @@ sudo pacman -S neovim eza zoxide fzf direnv
 sudo pacman -S wl-clipboard cliphist hyprshot
 sudo pacman -S ttf-jetbrains-mono-nerd ttf-font-awesome
 
+# AI coding CLIs (no brew here; node via nvm — see .zshrc.linux)
+npm install -g @openai/codex opencode-ai
+curl -fsSL https://claude.ai/install.sh | bash
+
 # Clone and deploy
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/Development/dotfiles
 cd ~/Development/dotfiles
@@ -79,6 +83,7 @@ cd ~/Development/dotfiles
 2. **Configure Powerlevel10k**: Run `p10k configure` for customization
 3. **Set up secrets**: Add any tokens/secrets to `~/.zshrc.local` (not tracked)
 4. **Linux only**: `hyprctl reload` or log out and back in
+5. **AI CLIs**: logins, MCP OAuth, plugins — `CLAUDE-tooling.md` → "Per-machine setup"
 
 ## Syncing Configs
 

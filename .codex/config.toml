@@ -1,0 +1,23 @@
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+[projects."/Users/patrick/Development/mono"]
+trust_level = "trusted"
+
+[projects."/Users/patrick/Development/latent-space"]
+trust_level = "trusted"
+
+[projects."/Users/patrick/Development/CV-fit"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+"gpt-5.4" = "gpt-5.6-terra"
+
+[mcp_servers.enam-mcp]
+url = "https://mcp.analytics.enam.co/mcp"
+
+[mcp_servers.enam-mcp.tools.getRepoContext]
+approval_mode = "approve"
+
+[mcp_servers.notion]
+url = "https://mcp.notion.com/mcp"

@@ -35,8 +35,9 @@ For Claude Code / opencode skill stack, memory model, auth, and worktree workflo
 - **`.claude/settings.json`** — Claude Code global config (enabled plugins, model, statusLine, extra marketplaces)
 - **`.claude/CLAUDE.md`** — Claude Code global user instructions (subagent-first, append-not-force git ops)
 - **`.claude/skills/`** — Personal Claude Code skills (e.g. `hex/`)
-- **`.config/opencode/opencode.json`** — opencode config (model + remote MCPs: enam, linear, notion)
+- **`.config/opencode/opencode.json`** — opencode config (model + remote MCPs: enam-mcp, linear, notion, atlassian)
 - **`.config/opencode/skills/`** — Personal opencode skills (bridged from `.claude/` via `bin/sync-claude-plugin-skills.sh`)
+- **`.codex/config.toml`** — Codex CLI config (model, reasoning effort, remote MCPs: enam-mcp, notion). Codex rewrites this file itself (project trust entries, migration notices) — expect machine-written drift. No tokens in it; MCP OAuth is `codex mcp login <name>` per machine.
 
 ### Scripts
 
@@ -62,7 +63,7 @@ The repo and live system configs may differ. ALWAYS run `./sync.sh status` befor
 
 `sync.sh` detects the OS via `uname -s` and merges platform-specific maps into the shared maps.
 
-**Shared (both):** `.zshrc`, `.zshrc.shared`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc`, `.config/kitty`, `.config/opencode/opencode.json`, `.config/opencode/skills`, `.claude/settings.json`, `.claude/CLAUDE.md`
+**Shared (both):** `.zshrc`, `.zshrc.shared`, `.zprofile`, `.p10k.zsh`, `.vimrc`, `.gitconfig`, `.psqlrc`, `.config/kitty`, `.config/opencode/opencode.json`, `.config/opencode/skills`, `.claude/settings.json`, `.claude/CLAUDE.md`, `.codex/config.toml`
 
 **Linux only:** `.zshrc.linux`, `.config/hyprwhspr/config.json`, `.config/hypr`, `.config/waybar`, `.config/mako`, `.config/rofi`, `.config/wofi`
 
@@ -75,6 +76,7 @@ The repo and live system configs may differ. ALWAYS run `./sync.sh status` befor
 - **Secrets:** Not stored in this repo. Tokens go in `~/.zshrc.local` (not tracked). A pre-commit hook scans for credential patterns. Exempt lines with `# nosecret`.
 - **Shell aliases to know:** `ls`→eza, `cd`→zoxide, `v`→nvim, `dots`→sync status, `gpom`→git pull origin main, `ti`/`tp`/`taaa`→terraform init/plan/apply.
 - **Cross-platform:** All shell config shared across Linux/macOS lives in `.zshrc.shared`. Platform-specific tools/paths go in `.zshrc.linux` or `.zshrc.darwin`.
+- **Linux parity:** `setup-mac.sh` is the canonical tool list; there is no `setup-linux.sh` yet. On Linux follow README → Linux (pacman/yay/npm equivalents), then the per-machine steps in `CLAUDE-tooling.md` → "Per-machine setup" (MCP logins, Claude plugins, skill bridge). Write `setup-linux.sh` on the Linux box where it can be tested.
 
 ## When Editing Configs
 
