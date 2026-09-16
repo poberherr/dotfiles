@@ -27,3 +27,7 @@ When a subagent (or you, when acting on a remote branch the user doesn't own exc
 - **Exceptions are user-driven.** If the user says "amend" / "squash" / "force-push" in the current turn, follow the instruction.
 
 **Why:** PR review threads anchor on commit SHAs and line numbers. Force-push invalidates that anchoring, surfaces a security warning in the harness, and risks silently dropping in-flight work from a parallel push (other reviewer, another agent, the user). Append-commit costs one extra commit in the per-PR history; squash-merge erases it at merge time.
+
+## Tooling
+
+- Python package manager: `uv` (not pip, not poetry)
